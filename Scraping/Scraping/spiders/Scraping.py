@@ -13,14 +13,11 @@ class RecipeSpider(scrapy.Spider):
             if recipe_url is not None:
                 # self.popula(response)
                 yield scrapy.Request(recipe_url, callback=self.parse_dir_contents)
-        print("\n\n\n\nnext\n")
         next_page = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "next", " " ))]/@href').get()
-        print(next_page)
-        print("\n\n\n\nnext\n")
+        print("next_page: ", next_page)
         yield response.follow(next_page, callback=self.parse)
                 
     def parse_dir_contents(self, response):
-        print("\n\n\n\n", "a", "\n\n\n\n")
         regraName = re.compile("\\n(.+), enviada por (.+) - TudoGostoso\\n")
         regraInt = re.compile("\\n(\d+(.\d*)?)\\n")
         regraPortions = re.compile("\\n(\d+) p")
@@ -38,7 +35,6 @@ class RecipeSpider(scrapy.Spider):
         r['spider'] = self.name
         
         yield r
-        # print("##############PRINTANDO##############")
         # for related in response.css('div.col-lg-6 a::attr(href)'):
         #     next_page = related.get()
         #     if next_page is not None:
