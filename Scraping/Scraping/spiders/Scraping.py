@@ -1,6 +1,8 @@
 import scrapy
 import re
 from Scraping.items import Recipe
+import json
+import requests
 
 class RecipeSpider(scrapy.Spider):
     name = "RecipeSpider"
@@ -23,18 +25,19 @@ class RecipeSpider(scrapy.Spider):
         regraPortions = re.compile("\\n(\d+) p")
         r = Recipe()
         r['name'] = regraName.match(response.css("title::text").get()).group(1)
-        r['prepTime'] = int(regraInt.match(response.css("time.dt-duration::text").get()).group(1).replace(".",""))
+        r['preptime'] = int(regraInt.match(response.css("time.dt-duration::text").get()).group(1).replace(".",""))
         r['portions'] = int(regraPortions.match(response.css("data.p-yield.num.yield::text").get()).group(1))
         r['likes'] = int(regraInt.match(response.css(".num::text")[4].get()).group(1).replace(".",""))
-        r['comments'] = int(regraInt.match(response.css(".num::text")[5].get()).group(1).replace(".",""))
+        # r['comments'] = int(regraInt.match(response.css(".num::text")[5].get()).group(1).replace(".",""))
         r['ingredients'] = response.xpath('//*[(@itemprop="recipeIngredient")]//p/text()').getall()
-        
-
         r['url'] = response.url
-        r['project'] = self.settings.get('BOT_NAME')
-        r['spider'] = self.name
+        
+        recipe = {"name": r['name'], "preptime": r['preptime'], "portions": r['portions'], "likes": r['likes'], "ingredients": json.dumps(r['ingredients'], ensure_ascii=False), "url": r['url']}
+        requests.post('https://cookitweb.herokuapp.com/recipe', data=recipe)
         
         yield r
+        #scrapy.Request('https://cookitweb.herokuapp.com/recipe', callback=self.parse_dir_contents)
+
         # for related in response.css('div.col-lg-6 a::attr(href)'):
         #     next_page = related.get()
         #     if next_page is not None:

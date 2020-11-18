@@ -10,17 +10,9 @@ class ExampleItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-class NewItem(scrapy.Item):
-    name = scrapy.Field()
-    text = scrapy.Field()
-    tags = scrapy.Field()
-    url = scrapy.Field()
-    project = scrapy.Field()
-    spider = scrapy.Field()
-
 class Recipe(scrapy.Item):
     name = scrapy.Field()
-    prepTime = scrapy.Field()
+    preptime = scrapy.Field()
     portions = scrapy.Field()
     likes = scrapy.Field()
     comments = scrapy.Field()
