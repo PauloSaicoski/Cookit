@@ -57,6 +57,22 @@ def recipePOST():
         abort(404, message="Algma coisa deu errado durante o commit")
     return recipe, 201
 
+@app.route('/search', methods=['GET'])
+# @marshal_with(resource_fields)
+def search():
+    try:
+        data = request.form
+        recipe = Recipe.query.filter(Recipe.ingredients.contains(data['ingredients']))
+        re = list()
+        for r in recipe:
+            print(r.id, flush=True)
+            re.append(r.id)
+        return jsonify({'data':re})
+        # return recipe
+    except:
+        abort(404, message="Faltou dados no form")
+
+
 @app.route('/recipe', methods=['GET'])
 @marshal_with(resource_fields)
 def recipeGET():  
