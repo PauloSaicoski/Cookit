@@ -16,6 +16,7 @@ class Recipe(scrapy.Item):
     portions = scrapy.Field()
     likes = scrapy.Field()
     comments = scrapy.Field()
+    author = scrapy.Field()
 
     ingredients = scrapy.Field()
 

@@ -24,12 +24,16 @@ class RecipeSpider(scrapy.Spider):
         regraInt = re.compile("\\n(\d+(.\d*)?)\\n")
         regraPortions = re.compile("\\n(\d+) p")
         r = Recipe()
-        r['name'] = regraName.match(response.css("title::text").get()).group(1)
+        titulo = regraName.match(response.css("title::text").get())
+        r['name'] = titulo.group(1)
+        r['author'] = titulo.group(2)
         r['preptime'] = int(regraInt.match(response.css("time.dt-duration::text").get()).group(1).replace(".",""))
         r['portions'] = int(regraPortions.match(response.css("data.p-yield.num.yield::text").get()).group(1))
         r['likes'] = int(regraInt.match(response.css(".num::text")[4].get()).group(1).replace(".",""))
         # r['comments'] = int(regraInt.match(response.css(".num::text")[5].get()).group(1).replace(".",""))
         r['ingredients'] = response.xpath('//*[(@itemprop="recipeIngredient")]//p/text()').getall()
+        #for ingrediente in r['ingredients']:
+
         r['url'] = response.url
         
         recipe = {"name": r['name'], "preptime": r['preptime'], "portions": r['portions'], "likes": r['likes'], "ingredients": json.dumps(r['ingredients'], ensure_ascii=False), "url": r['url']}
