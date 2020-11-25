@@ -1,7 +1,12 @@
-.recipe-item .recipe_image{
-    background-size: 100px;
-    width: 100px;
-    height: 100px;
-    border-radius: 100px;
+.list-item .recipe_image{
+    background-size: cover;
+    width: 200px;
+    height: 200px;
     margin-bottom: 10px;
+    margin-right: 50px;
+    border-radius: 20px;
   }
+
+.recipe-item{
+    display: flex;
+}

@@ -9,9 +9,25 @@
         <p><input type="submit" value="submit"/></p>
     </form>
     {% else %}
+    <ul>
         {% for recipe in recipes %}
-            <h1>{{ recipe.name }}</h1>
+        <li class="recipe-item">
+            <div class="list-item">
+                <div>
+                    <img align="left" src="https://img.itdg.com.br/tdg/images/recipes/000/171/883/348932/348932_original.jpg?mode=crop&width=710&height=400" class="recipe_image" alt="">
+                </div>
+                <div class="recipe-description">
+                    <h3>{{ recipe.name }}</h3>
+                    <span>Tempo de preparo: {{ recipe.time }}</span>
+                    <span>Porções: {{ recipe.portions }}</span>
+                    <span>Likes ou um coração: {{recipe.likes}}</span>
+                    <span>Por autor XXX</span>
+                </div>
+                
+            </div>
+        </li>
         {% endfor %}
+    </ul>
 
     {% endif %}
 {% endblock %}
