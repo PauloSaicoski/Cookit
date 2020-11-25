@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, url_for
 from flask_restful import abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -37,9 +37,18 @@ resource_fields = {
 def index():
     if request.method == 'POST':
         pass
-
     else:
-        return "hello index"
+        return render_template('index.html')
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        user = request.form['name']
+        return redirect(url_for("index"))
+    else:
+        return render_template("login.html")
+
+
 
 @app.route('/recipe', methods=['POST'])
 @marshal_with(resource_fields)
@@ -57,20 +66,24 @@ def recipePOST():
         abort(404, message="Algma coisa deu errado durante o commit")
     return recipe, 201
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET', 'POST'])
 # @marshal_with(resource_fields)
 def search():
-    try:
-        data = request.form
-        recipe = Recipe.query.filter(Recipe.ingredients.contains(data['ingredients']))
-        re = list()
-        for r in recipe:
-            print(r.id, flush=True)
-            re.append(r.id)
-        return jsonify({'data':re})
-        # return recipe
-    except:
-        abort(404, message="Faltou dados no form")
+    if request.method == 'GET':
+        return render_template("search.html")
+    else:
+        try:
+            data = request.form
+            recipe = Recipe.query.filter(Recipe.ingredients.contains(data['ingredients']))
+            re = list()
+            for r in recipe:
+                #print(r.id, flush=True)
+                re.append(r)
+            #return jsonify({'data':re})
+            return render_template("search.html", recipes = re)
+            # return recipe
+        except:
+            abort(404, message="Faltou dados no form")
 
 
 @app.route('/recipe', methods=['GET'])

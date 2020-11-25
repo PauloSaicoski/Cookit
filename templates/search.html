@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+    {% if recipes|length == 0 %}
+    <form action="#" method="POST">
+        <p>Ingrediente:</p>
+        <p><input type="text" name="ingredients"/></p>
+        <p><input type="submit" value="submit"/></p>
+    </form>
+    {% else %}
+        {% for recipe in recipes %}
+            <h1>{{ recipe.name }}</h1>
+        {% endfor %}
+
+    {% endif %}
+{% endblock %}
