@@ -32,7 +32,12 @@ class RecipeSpider(scrapy.Spider):
         r['likes'] = int(regraInt.match(response.css(".num::text")[4].get()).group(1).replace(".",""))
         # r['comments'] = int(regraInt.match(response.css(".num::text")[5].get()).group(1).replace(".",""))
         r['ingredients'] = response.xpath('//*[(@itemprop="recipeIngredient")]//p/text()').getall()
-        #for ingrediente in r['ingredients']:
+        for i in range(0,len(r['ingredients'])):
+            regraIngrediente = re.compile(r"\d+((\se\s\d/\d)|(/\d)(\s+de)?)?(\s+\w+((\s+de\s+\w+)|(\s+\(\w+\)))?(\s+de))?\s+(?P<ingrediente>\w+(\s+\w+)*?)$")
+            match = regraIngrediente.match(r['ingredients'][i])
+            if match:
+                r['ingredients'][i] = match.group('ingrediente')
+                # print("\n\n\n\n\n\n", r['ingredients'][i], "\n\n\n\n\n\n")
 
         r['url'] = response.url
         
