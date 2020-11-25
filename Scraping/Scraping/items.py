@@ -12,11 +12,12 @@ class ExampleItem(scrapy.Item):
 
 class Recipe(scrapy.Item):
     name = scrapy.Field()
+    author = scrapy.Field()
+    imgUrl = scrapy.Field()
     preptime = scrapy.Field()
     portions = scrapy.Field()
     likes = scrapy.Field()
     comments = scrapy.Field()
-    author = scrapy.Field()
 
     ingredients = scrapy.Field()
 

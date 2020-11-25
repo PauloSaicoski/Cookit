@@ -27,6 +27,7 @@ class RecipeSpider(scrapy.Spider):
         titulo = regraName.match(response.css("title::text").get())
         r['name'] = titulo.group(1)
         r['author'] = titulo.group(2)
+        r['imgUrl'] = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "pic", " " ))]/@src').get()
         r['preptime'] = int(regraInt.match(response.css("time.dt-duration::text").get()).group(1).replace(".",""))
         r['portions'] = int(regraPortions.match(response.css("data.p-yield.num.yield::text").get()).group(1))
         r['likes'] = int(regraInt.match(response.css(".num::text")[4].get()).group(1).replace(".",""))
@@ -41,7 +42,7 @@ class RecipeSpider(scrapy.Spider):
 
         r['url'] = response.url
         
-        recipe = {"name": r['name'], "preptime": r['preptime'], "portions": r['portions'], "likes": r['likes'], "ingredients": json.dumps(r['ingredients'], ensure_ascii=False), "url": r['url']}
+        recipe = {"name": r['name'], "author" : r['author'], "imgUrl" : r['imgUrl'], "preptime": r['preptime'], "portions": r['portions'], "likes": r['likes'], "ingredients": json.dumps(r['ingredients'], ensure_ascii=False), "url": r['url']}
         requests.post('https://cookitweb.herokuapp.com/recipe', data=recipe)
         
         yield r
