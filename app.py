@@ -2,13 +2,16 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for, f
 from flask_restful import abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from forms import ResistrationForm, LoginForm
 import re
+
+from forms import ResistrationForm, LoginForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Recipes.db'
 app.config['SECRET_KEY'] ='ad18303111748e53cf13022d4daeddc8'
 db = SQLAlchemy(app)
+
+
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,7 +66,11 @@ def register():
 def login():
     form = LoginForm()
     if request.method == 'POST':
-        return redirect(url_for("index"))
+        if form.validate_on_submit():
+            flash(f'Logado com com {form.email.data}!', 'sucess')
+            return redirect(url_for('index'))
+        else:
+            flash(f'Houve um problema!', 'fail')
     else:
         return render_template("login.html", form=form)
 
