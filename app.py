@@ -3,6 +3,7 @@ from flask_restful import abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from forms import ResistrationForm, LoginForm
+import re
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Recipes.db'
@@ -79,6 +80,12 @@ def recipePOST():
         abort(404, message="Algma coisa deu errado durante o commit")
     return recipe, 201
 
+def searchRecipesByList(lista):
+    if len(lista) > 1:
+        return searchRecipesByList(lista[1:]).filter(Recipe.ingredients.contains(lista[0]))
+    else:
+        return Recipe.query.filter(Recipe.ingredients.contains(lista[0]))
+
 @app.route('/search', methods=['GET', 'POST'])
 # @marshal_with(resource_fields)
 def search():
@@ -87,18 +94,13 @@ def search():
     else:
         try:
             data = request.form
-
-            ingredientes = list()
-            ingredientes.append('arroz')
-            ingredientes.append('sal')
-
-            recipe = Recipe.query.filter(Recipe.ingredients.contains(data['ingredients']))
-            re = list()
+            recipe = searchRecipesByList(re.split(r"\s*,\s*", data['ingredients']))
+            rec = list()
             for r in recipe:
                 #print(r.id, flush=True)
-                re.append(r)
+                rec.append(r)
             #return jsonify({'data':re})
-            return render_template("search.html", recipes = re)
+            return render_template("search.html", recipes = rec)
             # return recipe
         except:
             abort(404, message="Faltou dados no form")
@@ -138,4 +140,4 @@ def delete(id):
         abort(404, message="Something went wrong deleting the task")
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
