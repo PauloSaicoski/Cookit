@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %} Home Page {% endblock %}
 
+{% block css %}
+<link href="{{ url_for('static', filename='css/recipe-item.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
     {% if recipes|length == 0 %}
     <form action="#" method="POST">

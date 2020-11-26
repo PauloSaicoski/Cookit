@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for
 from flask_restful import abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from forms import ResistrationForm, LoginForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Recipes.db'
+app.config['SECRET_KEY'] ='ad18303111748e53cf13022d4daeddc8'
 db = SQLAlchemy(app)
 
 class Recipe(db.Model):
@@ -43,6 +45,14 @@ def index():
         recipes = Recipe.query.all()
         return render_template('index.html', recipes=recipes)
 
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    form = ResistrationForm()
+    if request.method == 'POST':
+        return render_template("register.html")
+    else:
+        return render_template("register.html", form=form)
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -77,6 +87,11 @@ def search():
     else:
         try:
             data = request.form
+
+            ingredientes = list()
+            ingredientes.append('arroz')
+            ingredientes.append('sal')
+
             recipe = Recipe.query.filter(Recipe.ingredients.contains(data['ingredients']))
             re = list()
             for r in recipe:
