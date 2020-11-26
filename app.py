@@ -15,8 +15,8 @@ class Recipe(db.Model):
     portions = db.Column(db.Integer, nullable=False)
     ingredients = db.Column(db.String(2000), nullable=False)
     url = db.Column(db.String(200), nullable=False)
-    # img_url = db.Column(db.String(200), nullable=True)
-    # author = db.Column(db.String(200), nullable=False)
+    imgUrl = db.Column(db.String(200), nullable=True)
+    author = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
         return '<Recipe %r>' % self.id
@@ -29,7 +29,9 @@ resource_fields = {
     'likes': fields.Integer,
     'portions': fields.Integer,
     'ingredients': fields.String,
-    'url': fields.String
+    'url': fields.String,
+    'imgUrl': fields.String,
+    'author': fields.String
 }
 
 
@@ -38,7 +40,8 @@ def index():
     if request.method == 'POST':
         pass
     else:
-        return render_template('index.html')
+        recipes = Recipe.query.all()
+        return render_template('index.html', recipes=recipes)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -55,7 +58,7 @@ def login():
 def recipePOST():
     try:
         data = request.form
-        recipe = Recipe(name=data['name'], preptime=data['preptime'], likes=data['likes'], portions=data['portions'], ingredients=data['ingredients'], url=data['url'])
+        recipe = Recipe(name=data['name'], preptime=data['preptime'], likes=data['likes'], portions=data['portions'], ingredients=data['ingredients'], url=data['url'], imgUrl=data['imgUrl'], author=data['author'])
     except:
         abort(404, message="Faltou dados no form")
 
@@ -120,4 +123,4 @@ def delete(id):
         abort(404, message="Something went wrong deleting the task")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

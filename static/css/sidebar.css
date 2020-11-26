@@ -119,15 +119,18 @@ label #sidebar_btn:hover{
 }
 
 .content{
+  display: flex;
+  height: 100%;
   margin-left: 250px;
   padding-left: 20px;
-  padding-top: 70px;
+  padding-top: 60px;
   
   /*background: url(background.png) no-repeat;
   background-position: center;
   background-size: cover;
   height: 100vh;
   */
+  background-color: rgb(245, 245, 245);
   
   transition: 0.5s;
 }

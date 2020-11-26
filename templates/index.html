@@ -2,6 +2,36 @@
 {% block title %} Home Page {% endblock %}
 
 {% block content %}
-<h1>Hello index</h1>
+<ul class="recipe-list">
+    {% for recipe in recipes %}
+    <a href="{{recipe.url}}">
+        <li class="recipe-item" >
+            <div class="list-item">
+                <div class="image-container">
+                    <img src="{{ recipe.imgUrl }}" class="recipe_image" alt="">
+                </div>
+                <div class="recipe-text">
+                    <h3>{{ recipe.name }}</h3>
+
+
+                    <div class="recipe-description">
+                        <div class="recipe-description1">
+                            <span>Tempo de preparo: {{ recipe.preptime }} min</span>
+                            <span>Porções: {{ recipe.portions }}</span>
+                        </div>
+
+                        <div class="recipe-description2">
+                            <span><span class="heart"></span> {{recipe.likes}}</span>
+                            <span>Por {{ recipe.author }}</span>
+                        </div>
+                    </div>
+
+                </div>
+                
+            </div>
+        </li>
+    </a>
+    {% endfor %}
+</ul>
     
 {% endblock %}
