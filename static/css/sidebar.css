@@ -118,18 +118,27 @@ label #sidebar_btn:hover{
   width: 80px;
 }
 
-.content{
+.alert{
+  /* border: 1px solid orange; */
+  color: #a60b0b;
+  font-size: 20px;
   display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  background-color: rgb(245, 245, 245);
+  transition: 0.5s;
+}
+
+.content{
+  /* border: 1px solid green; */
+
+  display: flex;
+  justify-content: center;
   height: 100%;
   margin-left: 250px;
   padding-left: 20px;
   padding-top: 60px;
   
-  /*background: url(background.png) no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: 100vh;
-  */
   background-color: rgb(245, 245, 245);
   
   transition: 0.5s;

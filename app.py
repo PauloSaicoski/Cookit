@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for
+from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from flask_restful import abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -50,17 +50,22 @@ def index():
 def register():
     form = ResistrationForm()
     if request.method == 'POST':
-        return render_template("register.html")
+        if form.validate_on_submit():
+            flash(f'Conta criada com {form.username.data}!', 'sucess')
+            return redirect(url_for('login'))
+        else:
+            flash(f'Houve um problema!', 'fail')
+        return render_template("register.html", form=form)
     else:
         return render_template("register.html", form=form)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    form = LoginForm()
     if request.method == 'POST':
-        user = request.form['name']
         return redirect(url_for("index"))
     else:
-        return render_template("login.html")
+        return render_template("login.html", form=form)
 
 
 
