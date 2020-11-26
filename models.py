@@ -1,11 +1,17 @@
 from datetime import datetime
-from app import db
+from app import db, login_manager
+from flask_login import UserMixin
 
-class User(db.Model):
+@login_manager.user_loader
+def loadUser(id):
+    return User.query.get(int(id))
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(200), unique=True,nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    preferences = db.relationship('Preference', backref='user', lazy=True)
     def __repr__(self):
         return '<Username %r>' % self.username
 
@@ -22,3 +28,7 @@ class Recipe(db.Model):
 
     def __repr__(self):
         return '<Recipe %r>' % self.id
+
+class Preference(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

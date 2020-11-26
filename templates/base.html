@@ -18,9 +18,16 @@
       <div class="left_area">
         <h3>Cook<span>it</span></h3>
       </div>
+      {% if current_user.is_authenticated %}
       <div class="right_area">
-        <a href="/register" class="logout_btn">Sign in/Log in</a>
+        <a href="/logout" class="logout_btn">Sair</a>
       </div>
+      {% else %}
+      <div class="right_area">
+        <a href="/login" class="logout_btn">Entrar</a>
+      </div>
+      {% endif %}
+
     </header>
     <!--header area end-->
     <!--sidebar start-->

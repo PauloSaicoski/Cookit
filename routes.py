@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from flask_restful import abort, fields, marshal_with
-from app import app
+from app import app, db, bcrypt
+from flask_login import login_user, current_user, logout_user
 import re
 
 from forms import ResistrationForm, LoginForm
-from models import Recipe
+from models import Recipe, User
 
 #serialize(Transforma para objeto json)
 resource_fields = {
@@ -30,10 +31,22 @@ def index():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = ResistrationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash(f'Conta criada com {form.username.data}!', 'sucess')
+            hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            user = User(username=form.username.data, email=form.email.data, password=hashed_pw)
+
+            try:
+                db.session.add(user)
+                db.session.commit()
+            except:
+                flash(f'Já existe uma conta com esse Nome ou Email!', 'fail')
+                return render_template("register.html", form=form)
+
+            flash(f'Conta criada com sucesso!', 'sucess')
             return redirect(url_for('login'))
         else:
             flash(f'Houve um problema!', 'fail')
@@ -43,15 +56,28 @@ def register():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash(f'Logado com com {form.email.data}!', 'sucess')
-            return redirect(url_for('index'))
-        else:
-            flash(f'Houve um problema!', 'fail')
+            user = User.query.filter_by(email=form.email.data).first()
+            
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                flash(f'Logado com Sucesso!', 'sucess')
+                return redirect(url_for('index'))
+
+        flash(f'Erro ao autenticar, verifique seu usuário/email ou senha!', 'fail')
+        return render_template("login.html", form=form)
     else:
         return render_template("login.html", form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash(f'Saiu com Sucesso!', 'sucess')
+    return redirect(url_for('index'))
 
 
 
