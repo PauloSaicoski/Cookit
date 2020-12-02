@@ -5,7 +5,7 @@ from flask_login import login_user, current_user, logout_user
 import re
 
 from forms import ResistrationForm, LoginForm
-from models import Recipe, User
+from models import Recipe, User, Favorite
 
 #serialize(Transforma para objeto json)
 resource_fields = {
@@ -20,13 +20,52 @@ resource_fields = {
     'author': fields.String
 }
 
-@app.route('/home', methods=['POST', 'GET'])
-def home():
+@app.route('/favorites', methods=['POST', 'GET'])
+def favorites():
     if request.method == 'POST':
-        pass
+        try:
+            data = request.form
+            # Verifica se a receita ja esta favoritada
+            favorite = Favorite.query.filter_by(user_id=data['user_id'],recipe_id=data['recipe_id']).first()
+            if favorite:
+                # Se estiver, tenta removela
+                try:
+                    db.session.delete(favorite)
+                    db.session.commit()
+                    favs = Favorite.query.filter_by(user_id=data['user_id']).all()
+                    return {'list':favs}, 201
+                except:
+                    abort(404, message="Ocorreu um erro deletando")
+            else:
+                # Se não estiver, tenta adicionala
+                favorite = Favorite(user_id=data['user_id'], recipe_id=data['recipe_id'])
+                try:
+                    db.session.add(favorite)
+                    db.session.commit()
+                    favs = Favorite.query.filter_by(user_id=data['user_id']).all()
+                    return {'list':favs}, 201
+                    # return "deu certo", 201
+
+                except:
+                    abort(404, message="Algma coisa deu errado durante o commit")
+        except:
+            abort(404, message="Faltou dados no form")
+        return "deu certo", 201
     else:
-        recipes = Recipe.query.all()
-        return render_template('indexbackup.html', recipes=recipes)
+        try:
+            data = current_user.id
+            print(data, flush=True)
+            favorites = Favorite.query.filter_by(user_id=data).all()
+            rec = list()
+            for f in favorites:
+                r = Recipe.query.filter_by(id=f.recipe_id).first()
+                rec.append(r)
+            return render_template("favorites.html", recipes = rec)
+        except:
+            abort(404, message="Algma coisa deu errado durante a busca")
+    return "ola"
+
+    
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -35,7 +74,10 @@ def index():
         pass
     else:
         recipes = Recipe.query.all()
-        return render_template('index.html', recipes=recipes)
+        favorites = list()
+        if current_user.is_authenticated:
+            favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+        return render_template('index.html', recipes=recipes, favorites=favorites)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():

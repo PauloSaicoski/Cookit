@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(200), unique=True,nullable=False)
     password = db.Column(db.String(200), nullable=False)
     preferences = db.relationship('Preference', backref='user', lazy=True)
+    
     def __repr__(self):
         return '<Username %r>' % self.username
 
@@ -32,3 +33,8 @@ class Recipe(db.Model):
 class Preference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
