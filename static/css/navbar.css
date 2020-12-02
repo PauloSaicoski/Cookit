@@ -1,0 +1,19 @@
+.navbar{
+  background: #2a2222;
+}
+
+.nav-item{
+  font-size: large;
+}
+
+.brand-name h3{
+  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.brand-name span{
+  color: #d31919;
+}

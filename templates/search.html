@@ -2,7 +2,7 @@
 {% block title %} Home Page {% endblock %}
 
 {% block css %}
-<link href="{{ url_for('static', filename='css/recipe-item.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/card-item.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -13,37 +13,36 @@
         <p><input type="submit" value="submit"/></p>
     </form>
     {% else %}
-    <ul class="recipe-list">
-        {% for recipe in recipes %}
-        <a href="{{recipe.url}}">
-            <li class="recipe-item" >
-                <div class="list-item">
-                    <div class="image-container">
-                        <img src="{{ recipe.imgUrl }}" class="recipe_image" alt="">
-                    </div>
-                    <div class="recipe-text">
-                        <h3>{{ recipe.name }}</h3>
-    
-    
-                        <div class="recipe-description">
-                            <div class="recipe-description1">
-                                <span>Tempo de preparo: {{ recipe.preptime }} min</span>
-                                <span>Porções: {{ recipe.portions }}</span>
-                            </div>
-    
-                            <div class="recipe-description2">
-                                <span><span class="heart"></span> {{recipe.likes}}</span>
-                                <span>Por {{ recipe.author }}</span>
+    <div class="container-fluid recipes-container">
+        {% for row in recipes|batch(3) %}
+            <div class="row">
+                {% for recipe in row %}
+                <div class="col-lg-4">
+                    <div class="card recipe-card m-3">
+                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ recipe.name }}</h4>
+                            <h6 class="card-subtitle mb-3 text-muted">Por {{ recipe.author }}</h6>
+                            <div class="row mb">
+                                
+                                <div class="col-sm-4">
+                                    <p class="card-text"> <i class="fas fa-clock"></i> {{ recipe.preptime }} minutos</p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p class="card-text"><i class="fas fa-pizza-slice"></i> {{ recipe.portions }} porções</p>
+                                </div>
+                                <div class="col-sm-4">   
+                                    <p class="card-text"> <i class="fa fa-heart" aria-hidden="true"></i> {{ recipe.likes }}</p>
+                                </div>    
                             </div>
                         </div>
-    
                     </div>
-                    
-                </div>
-            </li>
-        </a>
+                </div> 
+                {% endfor %}    
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+       
 
     {% endif %}
 {% endblock %}

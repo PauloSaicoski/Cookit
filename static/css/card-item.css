@@ -1,0 +1,28 @@
+.heart:before {
+  content: '\2665';
+  color: red;
+}
+
+/* Remove Hypertext from Card */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.recipe-list{
+  /* border: 1px solid red; */
+}
+
+.recipe-card{
+  border-radius: 20px;
+  /* border: 1px solid blue; */
+}
+
+.recipe-image{
+  background-size: cover;
+  border-radius: 20px;
+}

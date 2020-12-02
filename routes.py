@@ -20,6 +20,14 @@ resource_fields = {
     'author': fields.String
 }
 
+@app.route('/home', methods=['POST', 'GET'])
+def home():
+    if request.method == 'POST':
+        pass
+    else:
+        recipes = Recipe.query.all()
+        return render_template('indexbackup.html', recipes=recipes)
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
