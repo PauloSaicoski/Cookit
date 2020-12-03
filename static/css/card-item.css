@@ -21,6 +21,7 @@ a:hover {
 
 .recipe-card{
   border-radius: 20px;
+  height: 100%;
   /* border: 1px solid blue; */
 }
 

@@ -1,5 +1,5 @@
 body {
-	color: #999;
+	/* color: #999; */
 	background: #f3f3f3;
 	font-family: 'Roboto', sans-serif;
 	/* border:1px solid orange; */
@@ -108,4 +108,33 @@ body {
 }	
 .search-form form a:hover {
 	text-decoration: underline;
+}
+
+.container{
+	position: relative;
+	width: 100%;
+	border: 1px solid red;
+}
+
+
+/* Style the button and place it in the middle of the container/image */
+.card .btn2 {
+	position: absolute;
+	top: 5%;
+	left: 95%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	/* color: #e42d2d; */
+	color: #ffae00;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	border:0;
+	display: none;
+    background:transparent;
+  }
+
+.card:hover .btn2{
+	display: inline-block;
+	
 }

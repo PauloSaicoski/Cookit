@@ -42,12 +42,23 @@
 
 <div class="container-fluid recipes-container" id="mydiv">
     {% for row in recipes|batch(3) %}
-        <div class="row">
+        <div class="row mb-3">
             {% for recipe in row %}
             <div class="col-lg-4">
                 <a href="{{recipe.url}}">
                 <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
                     <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
+                    <!-- <div class="container"> -->
+                        {% if current_user.is_authenticated %}
+                            {% if recipe.id in favorites|map(attribute="recipe_id")%}
+                                <a class="fa fa-star fa-2x btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
+                            {% else %}
+                                <a class="far fa-star fa-2x btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
+                            {% endif %}
+                        {% endif %}
+
+                    <!-- </div> -->
+
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>
                         <h6 class="card-subtitle mb-3 text-muted">Por {{ recipe.author }}</h6>
@@ -65,13 +76,10 @@
                         </div>
                     </div>
                     {% if current_user.is_authenticated %}
-                    {% if recipe.id in favorites|map(attribute="recipe_id")%}
-                    <a class="btn btn-outline-dark m-3 " style="background-color:#ff0000" id="favb{{recipe.id}}">Remover dos Favoritos</a>
-                    {% else %}
-                    <a class="btn btn-outline-dark m-3 btnfav" style="background-color:#ffffff"id="favb{{recipe.id}}">Adicionar aos Favoritos</a>
-                    {% endif %}
+                    
                     <script>
-                        $("#favb{{recipe.id}}").on('click',function(e){                   
+                        // $("#favb{{recipe.id}}").on('click',function(e){                   
+                        $("#starbt1{{recipe.id}}").on('click',function(e){                   
                         $.ajax({
                             type: 'POST',
                             url:"{{url_for('favorites')}}",
@@ -84,12 +92,22 @@
                                alert(xhr.responseText);
                             }
                         }).then(function(e){
-                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
-                                $("#favb{{recipe.id}}").css('background-color', 'red').text('Remover dos Favoritos')
+                            
+                            // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
+                            if($("#starbt1{{recipe.id}}").hasClass('far')){
+                                $("#favb{{recipe.id}}").css('background-color', '#e42d2d').text('Remover dos Favoritos').css('color', '#ffffff')
+                                // $("#starbt1{{recipe.id}}").hide()
+                                // $("#starbt2{{recipe.id}}").show()
+                                $("#starbt1{{recipe.id}}").removeClass('far').addClass('fa').css('color', '#ffae00')
                             }
-                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 0, 0)"){
-                                $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos')
+                            // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(228, 45, 45)"){
+                            else if($("#starbt1{{recipe.id}}").hasClass('fa')){
+                                $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos').css('color', '#777')
+                                // $("#starbt2{{recipe.id}}").hide()
+                                // $("#starbt1{{recipe.id}}").show()
+                                $("#starbt1{{recipe.id}}").removeClass('fa').addClass('far').css('color', '#ffae00')
                             }
+                            $( "#here" ).load(location.href + " #here" );
                             
                         })
                         // e.preventDefault()
