@@ -58,18 +58,17 @@
         </form> -->
       </div>
     </nav>
+    <div class="alert-div">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <ul class=flashes>
-        {% for category, message in messages %}
-          <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
+      <ul class=flashes>
         {% for category, message in get_flashed_messages(with_categories=True) %}
-          <div class="alert-{{category}}">Error: {{ message }}</div>
+        <div class="alert alert-{{category}} mt-3" role="alert">{{ message }}</div>
         {% endfor %}
-        </ul>
+      </ul>
       {% endif %}
     {% endwith %}
+    </div>
    
       {% block content %} {% endblock %}
 

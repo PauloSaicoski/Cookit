@@ -18,22 +18,15 @@
   color: #d31919;
 }
 
-.alert-error {
-  padding: 12px;
-  border-radius: 3px;
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-  border: 2px solid darkred;
-  background-color: red;
-  color: white;
+.alert-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-left: -20px;
 }
 
-.alert-info {
-  padding: 12px;
-  border-radius: 3px;
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-  border: 2px solid orange;
-  background-color: yellow;
-  color: black;
+.alert{
+  width: 100%;
+  max-width: 500px;
+  align-self: start;
 }

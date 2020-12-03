@@ -103,13 +103,13 @@ def register():
                 db.session.add(user)
                 db.session.commit()
             except:
-                flash(f'Já existe uma conta com esse Nome ou Email!', 'fail')
+                flash('Já existe uma conta com esse Nome ou Email!', 'danger')
                 return render_template("register.html", form=form)
 
-            flash(f'Conta criada com sucesso!', 'sucess')
+            flash('Conta criada com sucesso!', 'sucess')
             return redirect(url_for('login'))
         else:
-            flash(f'Houve um problema!', 'fail')
+            flash('Houve um problema!', 'danger')
         return render_template("register.html", form=form)
     else:
         return render_template("register.html", form=form)
@@ -125,10 +125,10 @@ def login():
             
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                flash(f'Logado com Sucesso!', 'sucess')
+                flash('Logado com Sucesso!', 'success')
                 return redirect(url_for('index'))
 
-        flash(f'Erro ao autenticar, verifique seu usuário/email ou senha!', 'fail')
+        flash('Erro ao autenticar, verifique seu email ou senha!', 'danger')
         return render_template("login.html", form=form)
     else:
         return render_template("login.html", form=form)
@@ -136,7 +136,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    flash(f'Saiu com Sucesso!', 'sucess')
+    flash('Saiu com Sucesso!', 'success')
     return redirect(url_for('index'))
 
 
