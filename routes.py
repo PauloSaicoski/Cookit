@@ -182,32 +182,6 @@ def searchRecipesByList(lista):
     else:
         return Recipe.query.filter(Recipe.ingredients.contains(lista[0]))
 
-@app.route('/search', methods=['GET', 'POST'])
-# @marshal_with(resource_fields)
-def search():
-    if request.method == 'GET':
-        form = LoginForm()
-        return render_template("search.html", form=form)
-    else:
-        try:
-            # print(request.get_data().decode('utf-8'), flush=True)
-            # print(request.values, flush=True)
-            
-            data = request.form.to_dict(flat=False)
-            
-            data = data['ingredient'][1]
-            recipe = searchRecipesByList(re.split(r"\s*,\s*", data))
-            rec = list()
-            for r in recipe:
-                #print(r.id, flush=True)
-                rec.append(r)
-            #return jsonify({'data':re})
-            return render_template("search.html", recipes = rec)
-            # return recipe
-        except:
-            abort(404, message="Faltou dados no form")
-
-
 @app.route('/recipe', methods=['GET'])
 @marshal_with(resource_fields)
 def recipeGET():  
