@@ -71,6 +71,8 @@ def favorites():
             for f in favorites:
                 r = Recipe.query.filter_by(id=f.recipe_id).first()
                 rec.append(r)
+            if(len(rec)==0):
+                flash("Você ainda não tem nenhum favorito, tente adicionar alguns!", 'info')
             return render_template("favorites.html", recipes = rec)
         except:
             abort(404, message="Algma coisa deu errado durante a busca")
