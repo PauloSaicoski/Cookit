@@ -4,9 +4,10 @@ from app import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
 import re
 from werkzeug.datastructures import ImmutableMultiDict
+import random
 
 from forms import ResistrationForm, LoginForm
-from models import Recipe, User, Favorite
+from models import Recipe, User, Favorite, Preference
 
 #serialize(Transforma para objeto json)
 resource_fields = {
@@ -83,19 +84,37 @@ def favorites():
 def index():
     if request.method == 'POST':
         try:
-       
+            
+            # Transforma as tags em uma lista
             data = request.form.to_dict(flat=False)        
             data = data['ingredient'][1]
+            data = re.split(r"\s*,\s*", data)
 
-            recipe = searchRecipesByList(re.split(r"\s*,\s*", data))
+            # Adiciona uma preferencia aleatoria
+            if current_user.is_authenticated:
+                user_prefs = Preference.query.filter_by(user_id=current_user.id).all()
+                # print(len(user_prefs), flush=True)
+                if user_prefs:
+                    id = random.randrange(0, len(user_prefs))
+                    # print(id, flush=True)
+                    data.append(user_prefs[id].ingredient)
+
+            recipe = searchRecipesByList(data)
             rec = recipe
-            # for r in recipe:
-            #     #print(r.id, flush=True)
-            #     rec.append(r)
-            #return jsonify({'data':re})
+          
             favorites = list()
             if current_user.is_authenticated:
-                favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+                try:
+                    favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+                    for i in data:
+                        prefrence = Preference.query.filter_by(user_id=current_user.id, ingredient=i).first()
+                        if not prefrence:
+                            preference = Preference(user_id=current_user.id, ingredient=i)
+                            db.session.add(preference)
+                            db.session.commit()
+                        
+                except:
+                    abort(404, message="Faltou dados no form")
             
             return render_template("index.html", recipes = rec, favorites=favorites, method=2)
             # return recipe
@@ -193,7 +212,7 @@ def recipeGET():
         abort(404, message="Faltou dados no form")
 
 @app.route('/all', methods=['GET'])
-def recipeAll():  
+def recipeAll():
     try:
         recipe = Recipe.query.all()
         re = list()

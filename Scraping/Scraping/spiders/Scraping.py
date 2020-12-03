@@ -43,7 +43,8 @@ class RecipeSpider(scrapy.Spider):
         r['url'] = response.url
         
         recipe = {"name": r['name'], "author" : r['author'], "imgUrl" : r['imgUrl'], "preptime": r['preptime'], "portions": r['portions'], "likes": r['likes'], "ingredients": json.dumps(r['ingredients'], ensure_ascii=False), "url": r['url']}
-        requests.post('https://cookitweb.herokuapp.com/recipe', data=recipe)
+        # requests.post('https://cookitweb.herokuapp.com/recipe', data=recipe)
+        requests.post('http://localhost:5000/recipe', data=recipe)
         
         yield r
         #scrapy.Request('https://cookitweb.herokuapp.com/recipe', callback=self.parse_dir_contents)
