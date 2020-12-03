@@ -3,6 +3,7 @@ from flask_restful import abort, fields, marshal_with
 from app import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
 import re
+from werkzeug.datastructures import ImmutableMultiDict
 
 from forms import ResistrationForm, LoginForm
 from models import Recipe, User, Favorite
@@ -167,11 +168,17 @@ def searchRecipesByList(lista):
 # @marshal_with(resource_fields)
 def search():
     if request.method == 'GET':
-        return render_template("search.html")
+        form = LoginForm()
+        return render_template("search.html", form=form)
     else:
         try:
-            data = request.form
-            recipe = searchRecipesByList(re.split(r"\s*,\s*", data['ingredients']))
+            # print(request.get_data().decode('utf-8'), flush=True)
+            # print(request.values, flush=True)
+            
+            data = request.form.to_dict(flat=False)
+            
+            data = data['ingredient'][1]
+            recipe = searchRecipesByList(re.split(r"\s*,\s*", data))
             rec = list()
             for r in recipe:
                 #print(r.id, flush=True)

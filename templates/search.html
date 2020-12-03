@@ -3,15 +3,42 @@
 
 {% block css %}
 <link href="{{ url_for('static', filename='css/card-item.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/tagsinput.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/search.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
     {% if recipes|length == 0 %}
-    <form action="#" method="POST">
-        <p>Ingrediente:</p>
-        <p><input type="text" name="ingredients" data-role="tagsinput" /></p>
-        <p><input type="submit" value="submit"/></p>
-    </form>
+
+    <div class="search-form">
+        <form action="#" method="post" class="form-horizontal">
+              <div class="row">
+                <div class="col-8 offset-3">
+                    <h2>Procure receitas pelos seus ingredientes!</h2>
+                </div>	
+              </div>			
+            <div class=" input-div d-inline-flex justify-content-center">
+                <div class=" col-input">
+                    <label class="col-form-label">Ingredientes</label>
+                    <form action="#" method="POST">
+                        <input class="form-control" type="text" name="ingredient" data-role="tagsinput" />
+                    </form>
+                    <div class="btn-div">
+                        <button type="submit" value='Submit' class="btn btn-primary btn-lg">Procurar</button>
+                    </div>
+                </div>        	
+            </div>
+            
+            <!-- <div class="form-group row">
+                <div class="col-8 offset-4">
+                    <p><label class="form-check-label"><input type="checkbox"> Lembrar de mim?</label></p>
+                    <button type="submit" class="btn btn-primary btn-lg">Registrar</button>
+                    
+                </div>  
+            </div>		       -->
+        </form>
+    </div>
+
     {% else %}
     <div class="container-fluid recipes-container">
         {% for row in recipes|batch(3) %}
@@ -45,4 +72,7 @@
        
 
     {% endif %}
+{% endblock %}
+{% block scripts %}
+
 {% endblock %}
