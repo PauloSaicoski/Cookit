@@ -138,3 +138,7 @@ body {
 	display: inline-block;
 	
 }
+.card:active .btn2{
+	display: inline-block;
+	
+}
