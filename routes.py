@@ -82,13 +82,31 @@ def favorites():
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        pass
+        try:
+       
+            data = request.form.to_dict(flat=False)        
+            data = data['ingredient'][1]
+
+            recipe = searchRecipesByList(re.split(r"\s*,\s*", data))
+            rec = recipe
+            # for r in recipe:
+            #     #print(r.id, flush=True)
+            #     rec.append(r)
+            #return jsonify({'data':re})
+            favorites = list()
+            if current_user.is_authenticated:
+                favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+            
+            return render_template("index.html", recipes = rec, favorites=favorites, method=2)
+            # return recipe
+        except:
+            abort(404, message="Faltou dados no form")
     else:
         recipes = Recipe.query.all()
         favorites = list()
         if current_user.is_authenticated:
             favorites = Favorite.query.filter_by(user_id=current_user.id).all()
-        return render_template('index.html', recipes=recipes, favorites=favorites)
+        return render_template('index.html', recipes=recipes, favorites=favorites, method=1)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
