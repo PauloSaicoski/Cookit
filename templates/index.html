@@ -42,9 +42,9 @@
 
 <div class="container-fluid recipes-container" id="mydiv">
     {% for row in recipes|batch(3) %}
-        <div class="row mb-3">
+        <div class="row">
             {% for recipe in row %}
-            <div class="col-lg-4">
+            <div class="col-lg-4 d-flex align-items-stretch">
                 <a href="{{recipe.url}}">
                 <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
                     <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">

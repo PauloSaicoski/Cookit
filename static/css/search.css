@@ -134,11 +134,3 @@ body {
     background:transparent;
   }
 
-.card:hover .btn2{
-	display: inline-block;
-	
-}
-.card:active .btn2{
-	display: inline-block;
-	
-}

@@ -21,7 +21,7 @@ a:hover {
 
 .recipe-card{
   border-radius: 20px;
-  height: 100%;
+  /* height: 100%; */
   /* border: 1px solid blue; */
 }
 
@@ -38,4 +38,18 @@ a:hover {
 
 .btnremovefav{
   background-color: red;
+}
+
+.card:hover .btn2{
+	display: inline-block;
+	
+}
+.card:active .btn2{
+	display: inline-block;
+	
+}
+
+.card:focus .btn2{
+	display: inline-block;
+	
 }
