@@ -20,31 +20,40 @@ resource_fields = {
     'author': fields.String
 }
 
+resource_fields_fav={
+    'id': fields.Integer,
+    'user_id': fields.Integer,
+    'recipe_id': fields.Integer
+}
+
 @app.route('/favorites', methods=['POST', 'GET'])
 def favorites():
+    if not current_user.is_authenticated:
+        flash('Você ainda não está logado para usar os Favoritos', 'info')
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         try:
             data = request.form
             # Verifica se a receita ja esta favoritada
             favorite = Favorite.query.filter_by(user_id=data['user_id'],recipe_id=data['recipe_id']).first()
             if favorite:
-                # Se estiver, tenta removela
+                # Se estiver, tenta remove-la
                 try:
                     db.session.delete(favorite)
                     db.session.commit()
-                    favs = Favorite.query.filter_by(user_id=data['user_id']).all()
-                    return {'list':favs}, 201
+                    
+                    return "deu certo", 201
                 except:
                     abort(404, message="Ocorreu um erro deletando")
             else:
-                # Se não estiver, tenta adicionala
+                # Se não estiver, tenta adiciona-la
                 favorite = Favorite(user_id=data['user_id'], recipe_id=data['recipe_id'])
                 try:
                     db.session.add(favorite)
                     db.session.commit()
-                    favs = Favorite.query.filter_by(user_id=data['user_id']).all()
-                    return {'list':favs}, 201
-                    # return "deu certo", 201
+                    
+                    return "deu certo", 201
 
                 except:
                     abort(404, message="Algma coisa deu errado durante o commit")
@@ -63,7 +72,8 @@ def favorites():
             return render_template("favorites.html", recipes = rec)
         except:
             abort(404, message="Algma coisa deu errado durante a busca")
-    return "ola"
+        return "ola"
+       
 
     
 

@@ -31,13 +31,10 @@
             <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Receitas</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="{{url_for('favorites')}}">Favoritos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Configurações</a>
+            <a class="nav-link" href="#">Preferências</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Sobre</a>
@@ -61,7 +58,18 @@
         </form> -->
       </div>
     </nav>
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+          <div class="alert-{{category}}">Error: {{ message }}</div>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
    
       {% block content %} {% endblock %}
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Favorites Page {% endblock %}
+{% block title %} Home Page {% endblock %}
 
 {% block css %}
 <link href="{{ url_for('static', filename='css/card-item.css') }}" rel="stylesheet">
@@ -9,13 +9,25 @@
 
 {% block content %}
 
-<div class="container-fluid recipes-container">
+{% if recipes|length == 0 %}
+
+<div class="container recipes-container mt-5" id="mydiv">
+    <div class="row">
+        <div class="col-lg">
+            <h2>Você ainda não tem nenhum favorito, tente adicionar alguns!</h2>
+
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="container-fluid recipes-container" id="mydiv">
     {% for row in recipes|batch(3) %}
         <div class="row">
             {% for recipe in row %}
             <div class="col-lg-4">
                 <a href="{{recipe.url}}">
-                <div class="card recipe-card m-3">
+                <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
                     <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>
@@ -34,32 +46,41 @@
                         </div>
                     </div>
                     {% if current_user.is_authenticated %}
-                    <a class="btn btn-outline-dark m-3 btnremovefav" id="favremove{{recipe.id}}">Remover Favoritos</a>
+                    <a class="btn btn-outline-dark m-3 " style="background-color:#ff0000" id="favb{{recipe.id}}">Remover dos Favoritos</a>
                     <script>
-                        $("#favremove{{recipe.id}}").on('click',function(j){
-                        $.ajax({
-                            type: 'POST',
-                            url:"{{url_for('favorites')}}",
+                        $("#favb{{recipe.id}}").on('click',function(e){                   
+                            $.ajax({
+                                type: 'POST',
+                                url:"{{url_for('favorites')}}",
                             data:{'recipe_id':'{{recipe.id}}',
-                                'user_id': '{{ current_user.id }}'},
+                            'user_id': '{{ current_user.id }}'},
                             sucess:function(response){
-                                console.log(reponse)
+                                alert('sucess');
                             },
-                            error:function(response){
-                                console.log(reponse)
+                            error: function(xhr, status, error) {
+                                alert(xhr.responseText);
                             }
-                            })
-                        
+                        }).then(function(e){
+                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
+                                $("#favb{{recipe.id}}").css('background-color', 'red').text('Remover dos Favoritos')
+                            }
+                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 0, 0)"){
+                                $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos')
+                            }
+                            
+                        })
+                        // e.preventDefault()
                         });
-                    </script>
+                        </script>
                     {% endif %}
                 </div>
-                </a>
-            </div> 
-            {% endfor %}    
-        </div>
+            </a>
+        </div> 
+        {% endfor %}    
+    </div>
     {% endfor %}
 </div>
+{% endif %}
     
 {% endblock %}
 

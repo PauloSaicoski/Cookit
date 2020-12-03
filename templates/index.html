@@ -9,13 +9,13 @@
 
 {% block content %}
 
-<div class="container-fluid recipes-container">
+<div class="container-fluid recipes-container" id="mydiv">
     {% for row in recipes|batch(3) %}
         <div class="row">
             {% for recipe in row %}
             <div class="col-lg-4">
                 <a href="{{recipe.url}}">
-                <div class="card recipe-card m-3">
+                <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
                     <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>
@@ -35,29 +35,34 @@
                     </div>
                     {% if current_user.is_authenticated %}
                     {% if recipe.id in favorites|map(attribute="recipe_id")%}
-                    <a class="btn btn-outline-dark m-3 btnremovefav" id="favb{{recipe.id}}">Remover dos Favoritos</a>
+                    <a class="btn btn-outline-dark m-3 " style="background-color:#ff0000" id="favb{{recipe.id}}">Remover dos Favoritos</a>
                     {% else %}
-                    <a class="btn btn-outline-dark m-3 btnfav" id="favb{{recipe.id}}">Adicionar aos Favoritos</a>
+                    <a class="btn btn-outline-dark m-3 btnfav" style="background-color:#ffffff"id="favb{{recipe.id}}">Adicionar aos Favoritos</a>
                     {% endif %}
                     <script>
-                        $("#favb{{recipe.id}}").on('click',function(e){
+                        $("#favb{{recipe.id}}").on('click',function(e){                   
                         $.ajax({
                             type: 'POST',
                             url:"{{url_for('favorites')}}",
                             data:{'recipe_id':'{{recipe.id}}',
                                 'user_id': '{{ current_user.id }}'},
                             sucess:function(response){
-                                console.log(reponse)
+                                alert('sucess');
                             },
-                            error:function(response){
-                                console.log(reponse);
+                            error: function(xhr, status, error) {
+                               alert(xhr.responseText);
                             }
                         }).then(function(e){
-                            $("p").hide()
+                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
+                                $("#favb{{recipe.id}}").css('background-color', 'red').text('Remover dos Favoritos')
+                            }
+                            if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 0, 0)"){
+                                $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos')
+                            }
                             
                         })
                         // e.preventDefault()
-                    });
+                        });
                     </script>
                     {% endif %}
                 </div>
