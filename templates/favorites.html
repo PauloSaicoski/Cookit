@@ -12,19 +12,24 @@
 
 {% if recipes|length != 0 %}
 <div class="container-fluid recipes-container" id="mydiv">
-    {% for row in recipes|batch(3) %}
-        <div class="row">
+    <div class="row align-items-start recipe-row align-items-stretch">
+        {% for row in recipes|batch(1) %}
             {% for recipe in row %}
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-6 recipe-col float-left d-flex align-items-stretch" id="recipe-col{{recipe.id}}">
                 <a href="{{recipe.url}}">
-                <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
-                    <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
-                    <!-- <div class="container"> -->
-                        {% if current_user.is_authenticated %} 
-                            <a class="fa fa-star fa-2x btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
+                <div class="card recipe-card m-3" id="recipe-card{{recipe.id}}" >
+                    <!-- <div class="container card-igm-top" style="background-image: url({{recipe.imgUrl}});"> -->
+                    <!-- <div class="container card-igm-top" style="background: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0),rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url({{recipe.imgUrl}}) no-repeat;"> -->
+                    <div class="container card-igm-top" style="background-image: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 85%),url({{recipe.imgUrl}});">
+                        
+                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} " style="opacity: 0;">
+                         
+                        {% if current_user.is_authenticated %}   
+                            <a class="fa fa-star btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
                         {% endif %}
+                    </div>
+                        
 
-                    <!-- </div> -->
 
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>
@@ -59,7 +64,6 @@
                                alert(xhr.responseText);
                             }
                         }).then(function(e){
-                            
                             // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
                             if($("#starbt1{{recipe.id}}").hasClass('far')){
                                 $("#favb{{recipe.id}}").css('background-color', '#e42d2d').text('Remover dos Favoritos').css('color', '#ffffff')
@@ -70,7 +74,7 @@
                             // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(228, 45, 45)"){
                             else if($("#starbt1{{recipe.id}}").hasClass('fa')){
                                 $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos').css('color', '#777')
-                                // $("#starbt2{{recipe.id}}").hide()
+                                // $("#recipe-card{{recipe.id}}").css('display', 'none')
                                 // $("#starbt1{{recipe.id}}").show()
                                 $("#starbt1{{recipe.id}}").removeClass('fa').addClass('far').css('color', '#ffae00')
                             }
@@ -83,10 +87,15 @@
                     {% endif %}
                 </div>
                 </a>
-            </div> 
+            </div>
+            <script>
+                $("#starbt1{{recipe.id}}").on('click',function(e){ 
+                    $("#recipe-col{{recipe.id}}").remove()
+                });
+            </script>
             {% endfor %}    
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
 {% endif %}
     

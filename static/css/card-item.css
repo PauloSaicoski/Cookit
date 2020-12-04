@@ -1,7 +1,3 @@
-.heart:before {
-  content: '\2665';
-  color: red;
-}
 
 /* Remove Hypertext from Card */
 a {
@@ -20,15 +16,33 @@ a:hover {
 }
 
 .recipe-card{
-  border-radius: 20px;
+  border-radius: 20px; 
   /* height: 100%; */
   /* border: 1px solid blue; */
 }
+.recipe-col{
+  border-radius: 20px; 
+  /* height: 100%; */
+  /* border: 1px solid red; */
+}
+
+.container{
+  border-radius: 20px;
+  background-size: cover;
+	/* border: 1px solid red; */
+}
+.container2{
+  
+  border: 1px solid red;
+  height: 100%;
+}
+
+
 
 .recipe-image{
   background-size: cover;
   width: 100%;
-  height: auto;
+  /* height: auto; */
   border-radius: 20px;
 }
 
@@ -40,16 +54,30 @@ a:hover {
   background-color: red;
 }
 
-.card:hover .btn2{
-	display: inline-block;
-	
-}
-.card:active .btn2{
-	display: inline-block;
-	
+
+@media screen and (min-width:992px) {
+	.btn2 {
+    font-size: min(calc(20px + .8vw), 2vw);
+  }
 }
 
-.card:focus .btn2{
-	display: inline-block;
-	
+@media screen and (max-width:992px) {
+	.btn2 {
+    font-size: max(calc(20px + .8vw), 2vw);
+  }
 }
+
+.btn2 {
+	position: absolute;
+	top: 5%;
+	left: 95%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+  /* color: #e42d2d; */
+  color: #ffae00;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	border:0;
+  background:transparent;
+  }
