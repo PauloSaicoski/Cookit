@@ -15,16 +15,21 @@
     {% for row in recipes|batch(3) %}
         <div class="row">
             {% for recipe in row %}
-            <div class="col-lg-4">
+            <div class="col-lg-4 d-flex align-items-stretch">
                 <a href="{{recipe.url}}">
-                <div class="card recipe-card m-3 recipe-card{{recipe.id}}">
-                    <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }}">
-                    <!-- <div class="container"> -->
-                        {% if current_user.is_authenticated %} 
-                            <a class="fa fa-star fa-2x btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
+                <div class="card recipe-card m-3 recipe-card{{recipe.id}}" >
+                    <!-- <div class="container card-igm-top" style="background-image: url({{recipe.imgUrl}});"> -->
+                    <!-- <div class="container card-igm-top" style="background: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0),rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url({{recipe.imgUrl}}) no-repeat;"> -->
+                    <div class="container card-igm-top" style="background-image: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 85%),url({{recipe.imgUrl}});">
+                        
+                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} " style="opacity: 0;">
+                         
+                        {% if current_user.is_authenticated %}   
+                            <a class="fa fa-star btn2" style="color: #ffae00" id="starbt1{{recipe.id}}"></a>
                         {% endif %}
+                    </div>
+                        
 
-                    <!-- </div> -->
 
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>

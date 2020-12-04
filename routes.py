@@ -66,7 +66,7 @@ def favorites():
         try:
             data = current_user.id
             print(data, flush=True)
-            favorites = Favorite.query.filter_by(user_id=data).all()
+            favorites = Favorite.query.filter_by(user_id=data).order_by(Favorite.recipe_id).all()
             rec = list()
             for f in favorites:
                 r = Recipe.query.filter_by(id=f.recipe_id).first()
