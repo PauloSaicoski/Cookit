@@ -86,23 +86,34 @@ def favorites():
 def index():
     if request.method == 'POST':
         try:
-            
+            # Simula as preferencias de usuário
+            preferencias = list()
+            carnes = list()
+            hortifruti = list()
+            carnes.append("frango")
+            hortifruti.append("milho")
+            hortifruti.append("cebola")
+            preferencias.append(carnes)
+            preferencias.append(hortifruti)
+
             # Transforma as tags em uma lista
             data = request.form.to_dict(flat=False)        
             data = data['ingredient'][1]
             data = re.split(r"\s*,\s*", data)
 
             # Adiciona uma preferencia aleatoria
-            if current_user.is_authenticated:
-                user_prefs = Preference.query.filter_by(user_id=current_user.id).all()
-                # print(len(user_prefs), flush=True)
-                if user_prefs:
-                    id = random.randrange(0, len(user_prefs))
-                    # print(id, flush=True)
-                    data.append(user_prefs[id].ingredient)
+            # if current_user.is_authenticated:
+            #     user_prefs = Preference.query.filter_by(user_id=current_user.id).all()
+            #     # print(len(user_prefs), flush=True)
+            #     if user_prefs:
+            #         id = random.randrange(0, len(user_prefs))
+            #         # print(id, flush=True)
+            #         data.append(user_prefs[id].ingredient)
 
-            recipe = searchRecipesByList(data)
-            rec = recipe
+            recipe = searchRecipesByList(data).all()
+            recipe.sort(key=sortByLikes, reverse = True)
+            recipePref = applyPreferences(data, preferencias)
+            rec = recipePref
           
             favorites = list()
             if current_user.is_authenticated:
@@ -202,6 +213,40 @@ def searchRecipesByList(lista):
         return searchRecipesByList(lista[1:]).filter(Recipe.ingredients.contains(lista[0]))
     else:
         return Recipe.query.filter(Recipe.ingredients.contains(lista[0]))
+
+def applyPreferences(lista, preferencias):
+    resultNormais = searchRecipesByList(lista).all()
+    resultPref = list()
+    for categoria in preferencias:
+        rand = random.randrange(0, len(categoria))
+        ingredients = lista.copy()
+        ingredients.append(categoria[rand]) # seleciona um elemento aleatório de cada lista de preferencias
+        resultPref.append(searchRecipesByList(ingredients).all()) # procura as receitas que utilizam aquele ingrediente além dos informados pelo usuário
+        resultNormais = list(set(resultNormais) - set(resultPref[-1])) # remove os resultados da lista original para evitar duplicacao
+    for i in range(1, len(resultPref)):
+        for j in range(0, i):
+            resultPref[i] = list(set(resultPref[i]) - set(resultPref[j])) # evita duplicacao de receitas
+            resultPref[i].sort(key=sortByLikes)
+    resultNormais.sort(key=sortByLikes)
+    resultFinal = list()
+    i=-1
+    while (len(resultPref) > 0 or len(resultNormais) > 0):
+        if (len(resultNormais) > 0):
+            resultFinal.append(resultNormais.pop())
+        if(len(resultPref) > 0):
+            i = (i+1)%len(resultPref)
+            if (len(resultPref[i]) > 0):
+                resultFinal.append(resultPref[i].pop())
+            else:
+                del resultPref[i]
+                i-=1
+            
+    return resultFinal
+    
+
+def sortByLikes(e):
+    return e.likes
+    
 
 @app.route('/recipe', methods=['GET'])
 @marshal_with(resource_fields)
