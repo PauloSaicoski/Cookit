@@ -41,14 +41,15 @@
 </div>
 
 <div class="container-fluid recipes-container" id="mydiv">
-    {% for row in recipes|batch(3) %}
-        <div class="row">
+    <div class="row d-flex align-items-stretch">
+        {% for row in recipes|batch(1) %}
             {% for recipe in row %}
-            <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="col-lg-4 col-md-6 recipe-col d-flex">
                 <a href="{{recipe.url}}">
                 <div class="card recipe-card m-3 recipe-card{{recipe.id}}" >
                     <!-- <div class="container card-igm-top" style="background-image: url({{recipe.imgUrl}});"> -->
                     <!-- <div class="container card-igm-top" style="background: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0),rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url({{recipe.imgUrl}}) no-repeat;"> -->
+                    {% if current_user.is_authenticated %}
                     <div class="container card-igm-top" style="background-image: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 85%),url({{recipe.imgUrl}});">
                         
                         <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} " style="opacity: 0;">
@@ -61,9 +62,18 @@
                         {% endif %}
                         {% endif %}
                     </div>
+                    {% else %}
+                    <div class="card-igm-top">
                         
+                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} ">
+                         
+                        
+                        <a class="fa fa-star btn2" style="color: #ffae00; opacity: 0;" id="starbt1{{recipe.id}}"></a>
 
+                    </div>
 
+                    {% endif %}
+                        
                     <div class="card-body">
                         <h4 class="card-title">{{ recipe.name }}</h4>
                         <h6 class="card-subtitle mb-3 text-muted">Por {{ recipe.author }}</h6>
@@ -123,8 +133,8 @@
                 </a>
             </div> 
             {% endfor %}    
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
     
 {% endblock %}

@@ -16,12 +16,15 @@ a:hover {
 }
 
 .recipe-card{
-  border-radius: 20px;
-  
+  border-radius: 20px; 
   /* height: 100%; */
   /* border: 1px solid blue; */
 }
-
+.recipe-col{
+  border-radius: 20px; 
+  /* height: 100%; */
+  /* border: 1px solid red; */
+}
 
 .container{
   border-radius: 20px;
@@ -39,7 +42,7 @@ a:hover {
 .recipe-image{
   background-size: cover;
   width: 100%;
-  height: auto;
+  /* height: auto; */
   border-radius: 20px;
 }
 
