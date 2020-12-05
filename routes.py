@@ -151,50 +151,32 @@ def favorites():
 def index():
     if request.method == 'POST':
         try:
-            # Simula as preferencias de usuário
-            preferencias = list()
-            carnes = list()
-            hortifruti = list()
-            carnes.append("frango")
-            hortifruti.append("milho")
-            hortifruti.append("cebola")
-            preferencias.append(carnes)
-            preferencias.append(hortifruti)
-
             # Transforma as tags em uma lista
             data = request.form.to_dict(flat=False)        
             data = data['ingredient'][1]
             data = re.split(r"\s*,\s*", data)
 
-            # Adiciona uma preferencia aleatoria
-            # if current_user.is_authenticated:
-            #     user_prefs = Preference.query.filter_by(user_id=current_user.id).all()
-            #     # print(len(user_prefs), flush=True)
-            #     if user_prefs:
-            #         id = random.randrange(0, len(user_prefs))
-            #         # print(id, flush=True)
-            #         data.append(user_prefs[id].ingredient)
-
             recipe = searchRecipesByList(data).all()
             recipe.sort(key=sortByLikes, reverse = True)
-            recipePref = applyPreferences(data, preferencias)
-            rec = recipePref
+            rec = recipe
           
             favorites = list()
             if current_user.is_authenticated:
                 try:
                     favorites = Favorite.query.filter_by(user_id=current_user.id).all()
-                    for i in data:
-                        prefrence = Preference.query.filter_by(user_id=current_user.id, ingredient=i).first()
-                        if not prefrence:
-                            preference = Preference(user_id=current_user.id, ingredient=i)
-                            db.session.add(preference)
-                            db.session.commit()
-                        
+                    preferences = Preference.query.filter_by(user_id=current_user.id).first()
+                    userpref = list()
+                    userpref.append(re.split(r"\s*,\s*", preferences.category1))
+                    userpref.append(re.split(r"\s*,\s*", preferences.category2))
+                    userpref.append(re.split(r"\s*,\s*", preferences.category3))
+                    userpref.append(re.split(r"\s*,\s*", preferences.category4))
+                    userpref.append(re.split(r"\s*,\s*", preferences.category5))
+                    recipePref = applyPreferences(data, userpref)
+                                 
                 except:
                     abort(404, message="Faltou dados no form")
             
-            return render_template("index.html", recipes = rec, favorites=favorites, method=2)
+            return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2)
             # return recipe
         except:
             abort(404, message="Faltou dados no form")
