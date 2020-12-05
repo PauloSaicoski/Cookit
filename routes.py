@@ -28,6 +28,21 @@ resource_fields_fav={
     'recipe_id': fields.Integer
 }
 
+@app.route('/preferences', methods=['POST', 'GET'])
+def preferences():
+    # if not current_user.is_authenticated:
+        # flash('Você ainda não está logado para usar as Preferências', 'info')
+        # return redirect(url_for('login'))
+    
+    if request.method == 'GET':
+        cat1 = ['Carne', 'Frango', 'Porco','Carne', 'Frango', 'Porco','Carne', 'Frango', 'Porco']
+        return render_template('preferences.html', cat=cat1)
+    else:
+        data = request.form['pref']
+        print(data, flush=True)
+        return "deu certo", 201
+
+
 @app.route('/favorites', methods=['POST', 'GET'])
 def favorites():
     if not current_user.is_authenticated:
@@ -65,7 +80,7 @@ def favorites():
     else:
         try:
             data = current_user.id
-            print(data, flush=True)
+            # print(data, flush=True)
             favorites = Favorite.query.filter_by(user_id=data).order_by(Favorite.recipe_id).all()
             rec = list()
             for f in favorites:
@@ -257,19 +272,7 @@ def recipeGET():
         return recipe
     except:
         abort(404, message="Faltou dados no form")
-
-@app.route('/all', methods=['GET'])
-def recipeAll():
-    try:
-        recipe = Recipe.query.all()
-        re = list()
-        for r in recipe:
-            print(r.id, flush=True)
-            re.append(r.id)
-        return jsonify({'data':re})
-    except:
-        abort(404, message="Faltou dados no form")
-    
+  
 @app.route('/delete/<int:id>', methods=['DELETE'])
 def delete(id):
     to_delete = Recipe.query.get_or_404(id)

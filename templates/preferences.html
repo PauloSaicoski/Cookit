@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title%} Preferences Page {% endblock %}
+{% block css %} 
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href="{{ url_for('static', filename='css/preferences.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/search.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row pref-row">
+        <div class="pref-col col-xl-4 col-lg-6 col-md-7 col-sm-8 col-10">
+            <div class="single category">
+                <h3 class="side-title">Categoria: Carnes</h3>
+                <ul class="list-group list-group-flush">
+                    {% for item in cat %}
+                    <li class="list-group-item">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" value="{{item}}" id="Check{{item}}">
+                            <label class="custom-control-label" for="Check{{item}}">{{item}}</label>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                
+                <a href="{{url_for('index')}}">
+                    <button class="btn btn-primary" id="botao">Próxima página</button>
+                </a>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#botao").on('click', function(e){
+        var preferences = '';
+        $("input:checked").each( function(){
+            preferences += $(this).attr("value") + ',';           
+        });
+        preferences = preferences.slice(0,-1);
+        
+        $.ajax({
+            type: 'POST',
+            url:"{{url_for('preferences')}}",
+            data:{'pref': preferences},
+        });
+        
+        
+
+
+    });
+</script>
+{% endblock %}
+
+{% block scrpits %}
+
+
+{% endblock %}

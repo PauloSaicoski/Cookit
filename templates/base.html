@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/tagsinput.css') }}" rel="stylesheet">
+    
 
     <!-- Fonts Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -34,7 +34,7 @@
             <a class="nav-link" href="{{url_for('favorites')}}">Favoritos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Preferências</a>
+            <a class="nav-link" href="{{url_for('preferences')}}">Preferências</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Sobre</a>
@@ -43,11 +43,11 @@
         </ul>
         {% if current_user.is_authenticated %}
         <form action="{{url_for('logout')}}">
-          <button class="btn btn-default my-2 my-sm-0" type="submit">Logout</button>
+          <button class="btn btn-light my-2 my-sm-0" type="submit">Logout</button>
         </form>
         {% else %}
           <form action="{{url_for('login')}}">
-            <button class="btn btn-default my-2 my-sm-0" type="submit">Login</button>
+            <button class="btn btn-light my-2 my-sm-0" type="submit">Login</button>
           </form>
       
         {% endif %}
