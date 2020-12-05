@@ -11,7 +11,7 @@
     <div class="row pref-row">
         <div class="pref-col col-xl-4 col-lg-6 col-md-7 col-sm-8 col-10">
             <div class="single category">
-                <h3 class="side-title">Categoria: Carnes</h3>
+                <h3 class="side-title">Categoria: {{catname}}</h3>
                 <ul class="list-group list-group-flush">
                     {% for item in cat %}
                     <li class="list-group-item">
@@ -22,10 +22,27 @@
                     </li>
                     {% endfor %}
                 </ul>
-                
-                <a href="{{url_for('index')}}">
-                    <button class="btn btn-primary" id="botao">Próxima página</button>
-                </a>
+                <div class="container-fluid">
+                    <div class="row d-flex">
+                        <div class="col d-flex">
+                            <a href="#">
+                                {% if id == 5 %}
+                                <button class="btn btn-primary float" id="botao">Concluir</button>
+                                {% else %}
+                                <button class="btn btn-primary float" id="botao">Próxima página</button>
+                                {% endif %}
+                            </a>
+                        </div>
+                        {% if id > 1 %}
+                        <div class="col d-flex">
+                            <a href="#">
+                                <button class="btn btn-primary float" id="botaoAnt">Voltar</button>
+                            </a>
+                        </div>
+                        {%endif%}
+                    </div>
+                    
+                </div>
         
             </div>
         </div>
@@ -42,14 +59,15 @@
         
         $.ajax({
             type: 'POST',
-            url:"{{url_for('preferences')}}",
+            url:"{{url_for('preferences', id=id)}}",
             data:{'pref': preferences},
+        }).then(function(){
+            window.location.href = "{{url_for('preferences', id=id+1)}}";
         });
-        
-        
-
-
     });
+    $("#botaoAnt").on('click', function(e){
+        window.location.href = "{{url_for('preferences', id=id-1)}}";
+    })
 </script>
 {% endblock %}
 

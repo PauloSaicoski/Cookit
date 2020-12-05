@@ -28,17 +28,67 @@ resource_fields_fav={
     'recipe_id': fields.Integer
 }
 
-@app.route('/preferences', methods=['POST', 'GET'])
-def preferences():
-    # if not current_user.is_authenticated:
-        # flash('Você ainda não está logado para usar as Preferências', 'info')
-        # return redirect(url_for('login'))
+@app.route('/preferences/<int:id>', methods=['POST', 'GET'])
+def preferences(id):
+
+    if not current_user.is_authenticated:
+        flash('Você ainda não está logado para usar as Preferências', 'info')
+        return redirect(url_for('login'))
+
+    if id == 6:
+        flash('Prefêrencias salvas com sucesso!', 'success')
+        return redirect(url_for('index'))
+
     
+    cat_names = ['Carnes', 'Legumes', 'Frutas', 'Cereais e Grãos', 'Outros']
+    cat1 = ['Carne', 'Frango', 'Porco','Carne Moída', 'Picanha', 'Costela','Linguiça', 'Pato', 'Filé']
+    cat2 = ['Alface', 'Feijão', 'Couve','Repolho', 'Brócolis', 'Couve-flor','Pepino', 'Tomate', 'Batata']
+    cat3 = ['Abacate', 'Abacaxi', 'Açaí', 'Banana', 'Cereja', 'Coco', 'Maça', 'Manga', 'Laranja', 'Uva']
+    cat4 = ['Arroz', 'Aveia', 'Milho', 'Soja']
+    cat5 = ['Leite', 'Queijo', 'Requeijão', 'Doce de Leite', 'Chocolate', 'Manteiga']
+    catIng = list()
+    catIng.append(cat1)
+    catIng.append(cat2)
+    catIng.append(cat3)
+    catIng.append(cat4)
+    catIng.append(cat5)
+
     if request.method == 'GET':
-        cat1 = ['Carne', 'Frango', 'Porco','Carne', 'Frango', 'Porco','Carne', 'Frango', 'Porco']
-        return render_template('preferences.html', cat=cat1)
+        return render_template('preferences.html', id=id, cat=catIng[id-1], catname=cat_names[id-1])
     else:
         data = request.form['pref']
+
+        try:
+            p = Preference.query.filter_by(user_id=current_user.id).first()
+            if p:
+                if id == 1:
+                    p.category1 = data
+                elif id == 2:
+                    p.category2 = data
+                elif id == 3:
+                    p.category3 = data
+                elif id == 4:
+                    p.category4 = data
+                elif id == 5:
+                    p.category5 = data
+                db.session.commit()
+            else:
+                if id == 1:
+                    p = Preference(user_id=current_user.id, category1=data)
+                elif id == 2:
+                    p = Preference(user_id=current_user.id, category2=data)
+                elif id == 3:
+                    p = Preference(user_id=current_user.id, category3=data)
+                elif id == 4:
+                    p = Preference(user_id=current_user.id, category4=data)
+                elif id == 5:
+                    p = Preference(user_id=current_user.id, category5=data)
+
+                db.session.add(p)
+                db.session.commit()
+        except:
+            abort(404, message="Ocorreu um erro")
+
         print(data, flush=True)
         return "deu certo", 201
 

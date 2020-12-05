@@ -1,12 +1,12 @@
 .pref-row{
     display: flex;
     justify-content: center;
-    border: 1px solid green;
+    /* border: 1px solid green; */
     /* width: 100%; */
 }
 
 .pref-col{
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .single .btn {        
@@ -34,9 +34,9 @@
     text-transform: uppercase; }
     .single h3.side-title:after {
     content: '';
-    width: 60px;
-    height: 1px;
-    background: #ff173c;
+    width: 70%;
+    height: 3px;
+    background: #e42d2d;
     display: block;
     margin-top: 6px; }
     

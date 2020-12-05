@@ -33,7 +33,11 @@ class Recipe(db.Model):
 class Preference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    ingredient = db.Column(db.String(200), nullable=False)
+    category1 = db.Column(db.String(200), nullable=True)
+    category2 = db.Column(db.String(200), nullable=True)
+    category3 = db.Column(db.String(200), nullable=True)
+    category4 = db.Column(db.String(200), nullable=True)
+    category5 = db.Column(db.String(200), nullable=True)
 
 class Favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
