@@ -23,7 +23,7 @@ class Recipe(db.Model):
     likes = db.Column(db.Integer, nullable=False)
     portions = db.Column(db.Integer, nullable=False)
     ingredients = db.Column(db.String(2000), nullable=False)
-    url = db.Column(db.String(200), nullable=False)
+    url = db.Column(db.String(200), unique=True, nullable=False)
     imgUrl = db.Column(db.String(200), nullable=True)
     author = db.Column(db.String(200), nullable=False)
 
