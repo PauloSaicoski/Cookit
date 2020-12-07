@@ -195,7 +195,7 @@ def index():
                             userpref.append(re.split(r"\s*,\s*", preferences.category4))
                         if preferences.category5:
                             userpref.append(re.split(r"\s*,\s*", preferences.category5))
-                        print(userpref)
+                        # print(userpref)
                         recipePref = applyPreferences(data, userpref)
                     else:
                         recipePref = rec
