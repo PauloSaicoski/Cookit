@@ -54,7 +54,7 @@ def preferences(id):
     catIng.append(cat5)
 
     p = Preference.query.filter_by(user_id=current_user.id).first()
-    
+    userpref = ''
     if p:
         if id == 1:
             userpref = p.category1
