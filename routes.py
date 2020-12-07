@@ -42,9 +42,9 @@ def preferences(id):
     
     cat_names = ['Carnes', 'Legumes', 'Frutas', 'Cereais e Grãos', 'Outros']
     cat1 = ['Carne', 'Frango', 'Porco','Carne Moída', 'Picanha', 'Costela','Linguiça', 'Pato', 'Filé']
-    cat2 = ['Alface', 'Feijão', 'Couve','Repolho', 'Brócolis', 'Couve-flor','Pepino', 'Tomate', 'Batata']
+    cat2 = ['Alface', 'Couve','Repolho', 'Brócolis', 'Couve-flor','Pepino', 'Tomate', 'Batata']
     cat3 = ['Abacate', 'Abacaxi', 'Açaí', 'Banana', 'Cereja', 'Coco', 'Maça', 'Manga', 'Laranja', 'Uva']
-    cat4 = ['Arroz', 'Aveia', 'Milho', 'Soja']
+    cat4 = ['Arroz', 'Feijão', 'Aveia', 'Milho', 'Soja']
     cat5 = ['Leite', 'Queijo', 'Requeijão', 'Doce de Leite', 'Chocolate', 'Manteiga']
     catIng = list()
     catIng.append(cat1)
@@ -53,8 +53,25 @@ def preferences(id):
     catIng.append(cat4)
     catIng.append(cat5)
 
+    p = Preference.query.filter_by(user_id=current_user.id).first()
+    
+    if p:
+        if id == 1:
+            userpref = p.category1
+        elif id == 2:
+            userpref = p.category2
+        elif id == 3:
+            userpref = p.category3
+        elif id == 4:
+            userpref = p.category4
+        elif id == 5:
+            userpref = p.category5
+    if not userpref:
+        userpref = ''
+
+    
     if request.method == 'GET':
-        return render_template('preferences.html', id=id, cat=catIng[id-1], catname=cat_names[id-1])
+        return render_template('preferences.html', id=id, cat=catIng[id-1], catname=cat_names[id-1], userpref=userpref)
     else:
         data = request.form['pref']
 
@@ -161,6 +178,7 @@ def index():
             rec = recipe
           
             favorites = list()
+            recipePref = list()
             if current_user.is_authenticated:
                 try:
                     favorites = Favorite.query.filter_by(user_id=current_user.id).all()
@@ -171,12 +189,14 @@ def index():
                     userpref.append(re.split(r"\s*,\s*", preferences.category3))
                     userpref.append(re.split(r"\s*,\s*", preferences.category4))
                     userpref.append(re.split(r"\s*,\s*", preferences.category5))
+                    print(userpref)
                     recipePref = applyPreferences(data, userpref)
                                  
                 except:
                     abort(404, message="Faltou dados no form")
-            
-            return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2)
+                return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2)
+            else:
+                return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2)
             # return recipe
         except:
             abort(404, message="Faltou dados no form")
@@ -204,7 +224,7 @@ def register():
                 flash('Já existe uma conta com esse Nome ou Email!', 'danger')
                 return render_template("register.html", form=form)
 
-            flash('Conta criada com sucesso!', 'sucess')
+            flash('Conta criada com sucesso!', 'success')
             return redirect(url_for('login'))
         else:
             flash('Houve um problema!', 'danger')
@@ -224,6 +244,9 @@ def login():
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 flash('Logado com Sucesso!', 'success')
+                p = Preference.query.filter_by(user_id=current_user.id).first()
+                if not p:
+                    flash('Parece que você ainda não configurou as Preferências!', 'info')
                 return redirect(url_for('index'))
 
         flash('Erro ao autenticar, verifique seu email ou senha!', 'danger')
@@ -274,7 +297,7 @@ def applyPreferences(lista, preferencias):
         for j in range(0, i):
             resultPref[i] = list(set(resultPref[i]) - set(resultPref[j])) # evita duplicacao de receitas
             resultPref[i].sort(key=sortByLikes)
-    resultNormais.sort(key=sortByLikes)
+    # resultNormais.sort(key=sortByLikes)
     resultFinal = list()
     i=-1
     while (len(resultPref) > 0 or len(resultNormais) > 0):

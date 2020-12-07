@@ -16,14 +16,26 @@
                     {% for item in cat %}
                     <li class="list-group-item">
                         <div class="custom-control custom-checkbox">
+                            {% if item in userpref %}
+                            <input class="custom-control-input" type="checkbox" value="{{item}}" id="Check{{item}}" checked>
+                            <label class="custom-control-label" for="Check{{item}}">{{item}}</label>
+                            {% else %}
                             <input class="custom-control-input" type="checkbox" value="{{item}}" id="Check{{item}}">
                             <label class="custom-control-label" for="Check{{item}}">{{item}}</label>
+                            {% endif %}
                         </div>
                     </li>
                     {% endfor %}
                 </ul>
                 <div class="container-fluid">
                     <div class="row d-flex">
+                        {% if id > 1 %}
+                        <div class="col d-flex">
+                            <a href="#">
+                                <button class="btn btn-primary float" id="botaoAnt">Voltar</button>
+                            </a>
+                        </div>
+                        {%endif%}
                         <div class="col d-flex">
                             <a href="#">
                                 {% if id == 5 %}
@@ -33,13 +45,6 @@
                                 {% endif %}
                             </a>
                         </div>
-                        {% if id > 1 %}
-                        <div class="col d-flex">
-                            <a href="#">
-                                <button class="btn btn-primary float" id="botaoAnt">Voltar</button>
-                            </a>
-                        </div>
-                        {%endif%}
                     </div>
                     
                 </div>
