@@ -183,19 +183,22 @@ def index():
                 try:
                     favorites = Favorite.query.filter_by(user_id=current_user.id).all()
                     preferences = Preference.query.filter_by(user_id=current_user.id).first()
-                    userpref = list()
-                    if preferences.category1:
-                        userpref.append(re.split(r"\s*,\s*", preferences.category1))
-                    if preferences.category2:
-                        userpref.append(re.split(r"\s*,\s*", preferences.category2))
-                    if preferences.category3:
-                        userpref.append(re.split(r"\s*,\s*", preferences.category3))
-                    if preferences.category4:
-                        userpref.append(re.split(r"\s*,\s*", preferences.category4))
-                    if preferences.category5:
-                        userpref.append(re.split(r"\s*,\s*", preferences.category5))
-                    print(userpref)
-                    recipePref = applyPreferences(data, userpref)
+                    if preferences:
+                        userpref = list()
+                        if preferences.category1:
+                            userpref.append(re.split(r"\s*,\s*", preferences.category1))
+                        if preferences.category2:
+                            userpref.append(re.split(r"\s*,\s*", preferences.category2))
+                        if preferences.category3:
+                            userpref.append(re.split(r"\s*,\s*", preferences.category3))
+                        if preferences.category4:
+                            userpref.append(re.split(r"\s*,\s*", preferences.category4))
+                        if preferences.category5:
+                            userpref.append(re.split(r"\s*,\s*", preferences.category5))
+                        print(userpref)
+                        recipePref = applyPreferences(data, userpref)
+                    else:
+                        recipePref = rec
                                  
                 except:
                     abort(404, message="Faltou dados no form")
