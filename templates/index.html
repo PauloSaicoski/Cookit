@@ -22,8 +22,9 @@
             <div class=" col-input">
                 <label class="col-form-label">Ingredientes</label>
                 <form action="#" method="POST">
-                    <input class="form-control" type="text" name="ingredient" data-role="tagsinput" />
+                    <input class="form-control" type="text" name="ingredient" data-role="tagsinput" id="tagsInput" />
                 </form>
+                
                 <div class="btn-div">
                     <button type="submit" value='Submit' class="btn btn-primary btn-lg">Procurar</button>
                 </div>
@@ -136,10 +137,24 @@
         {% endfor %}
     </div>
 </div>
+
+{% for tag in tags %}
+<meta class="tagsData" data-name="{{tag}}">
+{% endfor %}
     
 {% endblock %}
 
 {% block scripts %}
-
+    
+<script>
+    $('.form-control').ready(function(e) {
+        $('.tagsData').each(function(index, element){
+            if(element.getAttribute('data-name')!='')
+                // alert(element.getAttribute('data-name'))
+                $('#tagsInput').tagsinput('add', element.getAttribute('data-name'));
+        });
+    });
+</script>
+   
 
 {% endblock %}

@@ -202,9 +202,10 @@ def index():
                                  
                 except:
                     abort(404, message="Faltou dados no form")
-                return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2)
+                return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2, tags=data)
             else:
-                return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2)
+                print(data, flush=True)
+                return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2, tags=data)
             # return recipe
         except:
             abort(404, message="Faltou dados no form")
