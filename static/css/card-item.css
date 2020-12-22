@@ -81,3 +81,17 @@ a:hover {
 	border:0;
   background:transparent;
   }
+
+.collapsebutton{
+  margin-top: 20px;
+  justify-content: center;
+  /* background-color: blueviolet; */
+}
+
+.ingList{
+  margin-top: 20px;
+  background-color: rgb(235, 235, 235);
+  border-radius: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}

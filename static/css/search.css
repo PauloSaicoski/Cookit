@@ -51,22 +51,14 @@ body {
 	
 }
 
-.col-input{
-	/* border: 1px solid purple; */
-	flex-grow: 1;
-	justify-content: center;
-}
-
 .input-div{
 	/* border: 1px solid purple; */
 	width: 100%;
-	
-	flex-direction: row;
-	text-align: center;
-	
-	
 	/* padding-left: 20%; */
+	text-align: center;
 }
+
+
 
 .search-form label {
 	/* border: 1px solid blue;	 */

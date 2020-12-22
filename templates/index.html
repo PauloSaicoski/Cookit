@@ -18,26 +18,18 @@
                 <h2>Procure receitas pelos seus ingredientes!</h2>
             </div>	
           </div>			
-        <div class=" input-div d-inline-flex justify-content-center">
-            <div class=" col-input">
-                <label class="col-form-label">Ingredientes</label>
-                <form action="#" method="POST">
-                    <input class="form-control" type="text" name="ingredient" data-role="tagsinput" id="tagsInput" />
-                </form>
+        <div class="container input-div">
+            
+            <label class="col-form-label">Ingredientes</label>
+            <form action="#" method="POST">
+                <input class="form-control" type="text" name="ingredient" data-role="tagsinput" id="tagsInput" />
+            </form>
                 
-                <div class="btn-div">
-                    <button type="submit" value='Submit' class="btn btn-primary btn-lg">Procurar</button>
-                </div>
-            </div>        	
+            <div class="btn-div">
+                <button type="submit" value='Submit' class="btn btn-primary btn-lg">Procurar</button>
+            </div>
+            
         </div>
-        
-        <!-- <div class="form-group row">
-            <div class="col-8 offset-4">
-                <p><label class="form-check-label"><input type="checkbox"> Lembrar de mim?</label></p>
-                <button type="submit" class="btn btn-primary btn-lg">Registrar</button>
-                
-            </div>  
-        </div>		       -->
     </form>
 </div>
 
@@ -46,7 +38,7 @@
         {% for row in recipes|batch(1) %}
             {% for recipe in row %}
             <div class="col-lg-4 col-md-6 recipe-col d-flex">
-                <a href="{{recipe.url}}">
+                <a href="{{recipe.url}}" target="_blank">
                 <div class="card recipe-card m-3 recipe-card{{recipe.id}}" >
                     <!-- <div class="container card-igm-top" style="background-image: url({{recipe.imgUrl}});"> -->
                     <!-- <div class="container card-igm-top" style="background: linear-gradient(to top right, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0),rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url({{recipe.imgUrl}}) no-repeat;"> -->
@@ -65,12 +57,8 @@
                     </div>
                     {% else %}
                     <div class="card-igm-top">
-                        
-                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} ">
-                         
-                        
+                        <img class="card-igm-top recipe-image" src="{{ recipe.imgUrl }} ">                
                         <a class="fa fa-star btn2" style="color: #ffae00; opacity: 0;" id="starbt1{{recipe.id}}"></a>
-
                     </div>
 
                     {% endif %}
@@ -90,11 +78,38 @@
                                 <p class="card-text"> <i class="fa fa-heart" aria-hidden="true"></i> {{ recipe.likes }}</p>
                             </div>    
                         </div>
+
+                        <div class="collapse" id="Footer{{recipe.id}}">
+                            <ul class="ingList" style="list-style-type:disc;">                  
+                                {% set list = recipe.ingredients|replace('"', '')|replace(']', '')|replace('[', '')  %}
+                                {% for item in list.split(',')%}
+                                    <li>{{ item }}</li>
+                                {% endfor %} 
+                            </ul> 
+                        </div>
+
+                        <div class="row collapsebutton">
+                            <div class="col-sm-4">   
+                                <a class="btn fas fa-angle-double-down card-text" id="collapsebt{{recipe.id}}" type="button" data-toggle="collapse" data-target="#Footer{{recipe.id}}" aria-expanded="false" aria-controls="collapseExample">
+                                    Ingredientes
+                                </a>
+                            </div>  
+                        </div>
+
+                        <script>
+                            $("#collapsebt{{recipe.id}}").on('click',function(e){
+                                if($("#collapsebt{{recipe.id}}").hasClass('fa-angle-double-down')){
+                                    $("#collapsebt{{recipe.id}}").removeClass('fa-angle-double-down').addClass('fa-angle-double-up')
+                                }else{
+                                    $("#collapsebt{{recipe.id}}").removeClass('fa-angle-double-up').addClass('fa-angle-double-down')
+                                }
+                            });
+                        </script>
+
                     </div>
                     {% if current_user.is_authenticated %}
                     
-                    <script>
-                        // $("#favb{{recipe.id}}").on('click',function(e){                   
+                    <script>                 
                         $("#starbt1{{recipe.id}}").on('click',function(e){                   
                         $.ajax({
                             type: 'POST',
@@ -109,18 +124,12 @@
                             }
                         }).then(function(e){
                             
-                            // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(255, 255, 255)"){
                             if($("#starbt1{{recipe.id}}").hasClass('far')){
                                 $("#favb{{recipe.id}}").css('background-color', '#e42d2d').text('Remover dos Favoritos').css('color', '#ffffff')
-                                // $("#starbt1{{recipe.id}}").hide()
-                                // $("#starbt2{{recipe.id}}").show()
                                 $("#starbt1{{recipe.id}}").removeClass('far').addClass('fa').css('color', '#ffae00')
                             }
-                            // if($("#favb{{recipe.id}}").css("background-color").toString()=="rgb(228, 45, 45)"){
                             else if($("#starbt1{{recipe.id}}").hasClass('fa')){
                                 $("#favb{{recipe.id}}").css('background-color', 'white').text('Adicionar aos Favoritos').css('color', '#777')
-                                // $("#starbt2{{recipe.id}}").hide()
-                                // $("#starbt1{{recipe.id}}").show()
                                 $("#starbt1{{recipe.id}}").removeClass('fa').addClass('far').css('color', '#ffae00')
                             }
                             $( "#here" ).load(location.href + " #here" );

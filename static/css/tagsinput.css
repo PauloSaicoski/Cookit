@@ -17,6 +17,7 @@
   line-height: 22px;
   cursor: text;
   margin-top: 4px;
+  text-align: left;
   /* border: 1px solid green; */
 }
 .bootstrap-tagsinput input {

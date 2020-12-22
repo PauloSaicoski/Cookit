@@ -5,6 +5,7 @@ from flask_login import login_user, current_user, logout_user
 import re
 from werkzeug.datastructures import ImmutableMultiDict
 import random
+import datetime
 
 from forms import ResistrationForm, LoginForm
 from models import Recipe, User, Favorite, Preference
@@ -249,9 +250,9 @@ def login():
     if request.method == 'POST':
         if form.validate_on_submit():
             user = User.query.filter_by(email=form.email.data).first()
-            
             if user and bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
+                delta = datetime.timedelta(minutes=5)
+                login_user(user, remember=form.remember.data, duration=delta)
                 flash('Logado com Sucesso!', 'success')
                 p = Preference.query.filter_by(user_id=current_user.id).first()
                 if not p:
