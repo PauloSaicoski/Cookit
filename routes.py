@@ -230,22 +230,25 @@ def index():
 
 @app.route('/page/<int:page>', methods=['POST', 'GET'])
 def search(page):
-    if "recipes" not in session:
-        recipes = Recipe.query.order_by(Recipe.likes.desc()).all()
-        rec = list()
-        for r in recipes:
-            rec.append(r.id)
-        session["recipes"] = rec
+    if request.method == "GET":
+        if "recipes" not in session:
+            recipes = Recipe.query.order_by(Recipe.likes.desc()).all()
+            rec = list()
+            for r in recipes:
+                rec.append(r.id)
+            session["recipes"] = rec
+        else:
+            rec_ids = session["recipes"]
+            recipes = db.session.query(Recipe).order_by(Recipe.likes.desc()).filter(Recipe.id.in_(rec_ids)).all()
+        max_page = int(len(recipes)/20) + 1
+        recipe_per_page = 20
+        # recipes = recipes[(page-1)*recipe_per_page:(page)*recipe_per_page]
+        favorites = list()
+        if current_user.is_authenticated:
+            favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+        return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = page, max_page=max_page)
     else:
-        rec_ids = session["recipes"]
-        recipes = db.session.query(Recipe).order_by(Recipe.likes.desc()).filter(Recipe.id.in_(rec_ids)).all()
-    max_page = int(len(recipes)/20) + 1
-    recipe_per_page = 20
-    # recipes = recipes[(page-1)*recipe_per_page:(page)*recipe_per_page]
-    favorites = list()
-    if current_user.is_authenticated:
-        favorites = Favorite.query.filter_by(user_id=current_user.id).all()
-    return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = page, max_page=max_page)
+        return redirect(url_for('index'), code=307)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():

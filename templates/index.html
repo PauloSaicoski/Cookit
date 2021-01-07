@@ -155,13 +155,27 @@
             {% if actual_page == 1 %}
                 <li class="page-item disabled"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page-1)}}">Anterior</a></li>
             {% else %}
-                <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page-1)}}">Anterior</a></li>
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page-1)}}">Anterior</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">{{actual_page+1}}</a></li>
-            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+2)}}">{{actual_page+2}}</a></li>
-            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+3)}}">{{actual_page+3}}</a></li>
-            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
-            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=max_page)}}">Última</a></li>
+            {% if actual_page > 1 %}
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=1)}}">1</a></li>
+            {% endif %}
+            {% if actual_page+1 < max_page %}
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page+1)}}">{{actual_page+1}}</a></li>
+            {% endif %}
+            {% if actual_page+2 < max_page %}
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page+2)}}">{{actual_page+2}}</a></li>
+            {% endif %}
+            {% if actual_page+3 < max_page %}
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page+3)}}">{{actual_page+3}}</a></li>
+            {% endif %}
+
+            <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=max_page)}}">{{max_page}}</a></li>
+            {% if actual_page+1 <= max_page %}
+                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
+            {% endif %}
         </ul>
     </nav>
 </div>
