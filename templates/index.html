@@ -7,6 +7,7 @@
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link href="{{ url_for('static', filename='css/tagsinput.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/search.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/pagination.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -35,8 +36,8 @@
 
 <div class="container-fluid recipes-container" id="mydiv">
     <div class="row d-flex align-items-stretch">
-        {% for row in recipes|batch(1) %}
-            {% for recipe in row %}
+        {% for recipe in recipes[(actual_page-1)*20:(actual_page)*20] %}
+            
             <div class="col-lg-4 col-md-6 recipe-col d-flex">
                 <a href="{{recipe.url}}" target="_blank">
                 <div class="card recipe-card m-3 recipe-card{{recipe.id}}" >
@@ -142,9 +143,27 @@
                 </div>
                 </a>
             </div> 
-            {% endfor %}    
+                
         {% endfor %}
     </div>
+    
+</div>
+
+<div class="container_pagination">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if actual_page == 1 %}
+                <li class="page-item disabled"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page-1)}}">Anterior</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page-1)}}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">{{actual_page+1}}</a></li>
+            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+2)}}">{{actual_page+2}}</a></li>
+            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+3)}}">{{actual_page+3}}</a></li>
+            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
+            <li class="page-item"><a class="page-link" method="GET" href="{{url_for('search', page=max_page)}}">Última</a></li>
+        </ul>
+    </nav>
 </div>
 
 {% for tag in tags %}

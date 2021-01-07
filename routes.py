@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify, url_for, flash, session
 from flask_restful import abort, fields, marshal_with
 from app import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user
@@ -6,6 +6,7 @@ import re
 from werkzeug.datastructures import ImmutableMultiDict
 import random
 import datetime
+import json
 
 from forms import ResistrationForm, LoginForm
 from models import Recipe, User, Favorite, Preference
@@ -160,10 +161,6 @@ def favorites():
         except:
             abort(404, message="Algma coisa deu errado durante a busca")
         return "ola"
-       
-
-    
-
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -203,19 +200,52 @@ def index():
                                  
                 except:
                     abort(404, message="Faltou dados no form")
-                return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2, tags=data)
+                max_page = int(len(recipePref)/20) + 1
+                rec_id = list()
+                for r in recipePref:
+                    rec_id.append(r.id)
+                session["recipes"] = rec_id
+                return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             else:
-                print(data, flush=True)
-                return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2, tags=data)
+                max_page = int(len(rec)/20) + 1
+                rec_id = list()
+                for r in rec:
+                    rec_id.append(r.id)
+                session["recipes"] = rec_id 
+                return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             # return recipe
         except:
             abort(404, message="Faltou dados no form")
     else:
-        recipes = Recipe.query.order_by(Recipe.likes.desc()).limit(50).all()
+        recipes = Recipe.query.order_by(Recipe.likes.desc()).all()
+        rec = list()
+        for r in recipes:
+            rec.append(r.id)
+        session["recipes"] = rec
+        max_page = int(len(recipes)/20) + 1
         favorites = list()
         if current_user.is_authenticated:
             favorites = Favorite.query.filter_by(user_id=current_user.id).all()
-        return render_template('index.html', recipes=recipes, favorites=favorites, method=1)
+        return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = 1, max_page=max_page)
+
+@app.route('/page/<int:page>', methods=['POST', 'GET'])
+def search(page):
+    if "recipes" not in session:
+        recipes = Recipe.query.order_by(Recipe.likes.desc()).all()
+        rec = list()
+        for r in recipes:
+            rec.append(r.id)
+        session["recipes"] = rec
+    else:
+        rec_ids = session["recipes"]
+        recipes = db.session.query(Recipe).order_by(Recipe.likes.desc()).filter(Recipe.id.in_(rec_ids)).all()
+    max_page = int(len(recipes)/20) + 1
+    recipe_per_page = 20
+    # recipes = recipes[(page-1)*recipe_per_page:(page)*recipe_per_page]
+    favorites = list()
+    if current_user.is_authenticated:
+        favorites = Favorite.query.filter_by(user_id=current_user.id).all()
+    return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = page, max_page=max_page)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -269,8 +299,6 @@ def logout():
     logout_user()
     flash('Saiu com Sucesso!', 'success')
     return redirect(url_for('index'))
-
-
 
 @app.route('/recipe', methods=['POST'])
 @marshal_with(resource_fields)
