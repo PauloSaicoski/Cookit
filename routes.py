@@ -205,13 +205,15 @@ def index():
                 for r in recipePref:
                     rec_id.append(r.id)
                 session["recipes"] = rec_id
+                session["tags"] = data
                 return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             else:
                 max_page = int(len(rec)/20) + 1
                 rec_id = list()
                 for r in rec:
                     rec_id.append(r.id)
-                session["recipes"] = rec_id 
+                session["recipes"] = rec_id
+                session["tags"] = data
                 return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             # return recipe
         except:
@@ -222,6 +224,7 @@ def index():
         for r in recipes:
             rec.append(r.id)
         session["recipes"] = rec
+        session["tags"] = list()
         max_page = int(len(recipes)/20) + 1
         favorites = list()
         if current_user.is_authenticated:
@@ -230,6 +233,10 @@ def index():
 
 @app.route('/page/<int:page>', methods=['POST', 'GET'])
 def search(page):
+    if "tags" in session:
+        tags = session["tags"]
+    else:
+        tags = list()
     if request.method == "GET":
         if "recipes" not in session:
             recipes = Recipe.query.order_by(Recipe.likes.desc()).all()
@@ -246,7 +253,7 @@ def search(page):
         favorites = list()
         if current_user.is_authenticated:
             favorites = Favorite.query.filter_by(user_id=current_user.id).all()
-        return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = page, max_page=max_page)
+        return render_template('index.html', recipes=recipes, favorites=favorites, method=1, actual_page = page, max_page=max_page, tags=tags)
     else:
         return redirect(url_for('index'), code=307)
 

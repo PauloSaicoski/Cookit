@@ -22,7 +22,7 @@
         <div class="container input-div">
             
             <label class="col-form-label">Ingredientes</label>
-            <form action="#" method="POST">
+            <form action="#" method="POST" id="tagsform">
                 <input class="form-control" type="text" name="ingredient" data-role="tagsinput" id="tagsInput" />
             </form>
                 
@@ -172,9 +172,9 @@
 
             <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=max_page)}}">{{max_page}}</a></li>
             {% if actual_page+1 <= max_page %}
-                <li class="page-item"><a class="page-link text-dark" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
+                <li class="page-item"><a class="page-link text-dark"  method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
             {% else %}
-                <li class="page-item disabled"><a class="page-link" method="GET" href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
+                <li class="page-item disabled"><a class="page-link" method="GET"  href="{{url_for('search', page=actual_page+1)}}">Próxima</a></li>
             {% endif %}
         </ul>
     </nav>
