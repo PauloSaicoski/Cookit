@@ -30,6 +30,8 @@ resource_fields_fav={
     'recipe_id': fields.Integer
 }
 
+not_found = ["Ops, parece que não esperávamos essa combinação de ingredientes!","Tem certeza que esses ingredientes combinam? Acho que esquecemos deles.", "Uau, não pensamos em usar esses ingredientes assim, obrigado pela dica!", "Acho que nossos paladares são diferentes, vamos tentar buscar outra coisa, que tal?","Não sei como cozinhar esses ingredientes, desculpe..."]
+
 @app.route('/preferences/<int:id>', methods=['POST', 'GET'])
 def preferences(id):
 
@@ -206,6 +208,9 @@ def index():
                     rec_id.append(r.id)
                 session["recipes"] = rec_id
                 session["tags"] = data
+                if len(rec) == 0:
+                    num = random.randint(0, len(not_found)-1)
+                    flash(not_found[num], 'info')
                 return render_template("index.html", recipes = recipePref, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             else:
                 max_page = int(len(rec)/20) + 1
@@ -214,6 +219,9 @@ def index():
                     rec_id.append(r.id)
                 session["recipes"] = rec_id
                 session["tags"] = data
+                if len(rec) == 0:
+                    num = random.randint(0, len(not_found)-1)
+                    flash(not_found[num], 'info')
                 return render_template("index.html", recipes = rec, recipespref=recipePref, favorites=favorites, method=2, actual_page = 1, max_page=max_page, tags=data)
             # return recipe
         except:

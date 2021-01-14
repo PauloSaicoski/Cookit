@@ -33,7 +33,7 @@ a:hover {
 }
 .container2{
   
-  border: 1px solid red;
+  /* border: 1px solid red; */
   height: 100%;
 }
 
@@ -86,7 +86,11 @@ a:hover {
   margin-top: 20px;
   justify-content: center;
   /* background-color: blueviolet; */
+  align-content: center;
+  text-align: center;
+  /* border: 1px red; */
 }
+
 
 .ingList{
   margin-top: 20px;
