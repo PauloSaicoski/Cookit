@@ -173,7 +173,7 @@ def index():
             data = data['ingredient'][1]
             data = re.split(r"\s*,\s*", data)
 
-            recipe = searchRecipesByList(data).order_by(Recipe.likes.desc()).limit(50).all()
+            recipe = searchRecipesByList(data).order_by(Recipe.likes.desc()).all()
             recipe.sort(key=sortByLikes, reverse = True)
             rec = recipe
           
@@ -341,13 +341,13 @@ def searchRecipesByList(lista):
         return Recipe.query.filter(Recipe.ingredients.contains(lista[0]))
 
 def applyPreferences(lista, preferencias):
-    resultNormais = searchRecipesByList(lista).order_by(Recipe.likes.desc()).limit(50).all()
+    resultNormais = searchRecipesByList(lista).order_by(Recipe.likes.desc()).all()
     resultPref = list()
     for categoria in preferencias:
         rand = random.randrange(0, len(categoria))
         ingredients = lista.copy()
         ingredients.append(categoria[rand]) # seleciona um elemento aleatório de cada lista de preferencias
-        resultPref.append(searchRecipesByList(ingredients).order_by(Recipe.likes.desc()).limit(30).all()) # procura as receitas que utilizam aquele ingrediente além dos informados pelo usuário
+        resultPref.append(searchRecipesByList(ingredients).order_by(Recipe.likes.desc()).all()) # procura as receitas que utilizam aquele ingrediente além dos informados pelo usuário
         resultNormais = list(set(resultNormais) - set(resultPref[-1])) # remove os resultados da lista original para evitar duplicacao
     for i in range(1, len(resultPref)):
         for j in range(0, i):
