@@ -13,10 +13,11 @@
             <div class="single category">
                 <h3 class="side-title">Categoria: {{catname}}</h3>
                 <ul class="list-group list-group-flush">
+                    {% set userpreflist = userpref.split(',') %}
                     {% for item in cat %}
                     <li class="list-group-item">
                         <div class="custom-control custom-checkbox">
-                            {% if item in userpref %}
+                            {% if item in userpreflist %}
                             <input class="custom-control-input" type="checkbox" value="{{item}}" id="Check{{item}}" checked>
                             <label class="custom-control-label" for="Check{{item}}">{{item}}</label>
                             {% else %}

@@ -73,7 +73,6 @@ def preferences(id):
     if not userpref:
         userpref = ''
 
-    
     if request.method == 'GET':
         return render_template('preferences.html', id=id, cat=catIng[id-1], catname=cat_names[id-1], userpref=userpref)
     else:
